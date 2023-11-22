@@ -1,4 +1,4 @@
 from django.shortcuts import render, redirect
 
 def mypage(request):
-    return render(request, "templates/mypage.html")
+    return render(request, "mypage.html")
