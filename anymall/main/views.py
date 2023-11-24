@@ -11,3 +11,6 @@ def shop(request):
 
 def mypage(request):
     return render(request, "mypage.html")
+
+def admin_set(request):
+    return render(request, "admin_set.html")
