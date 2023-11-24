@@ -1,0 +1,74 @@
+<!-- /*
+* Bootstrap 5
+* Template Name: Furni
+* Template Author: Untree.co
+* Template URI: https://untree.co/
+* License: https://creativecommons.org/licenses/by/3.0/
+*/ -->
+<!doctype html>
+<html lang="en">
+<head>
+	<link href="static/css/product.css" rel="stylesheet">
+	<title>Anymall</title>
+</head>
+
+<body>
+	{% include 'header.html' %}
+
+	<!-- Start Product Section -->
+	<div class="hero">
+		<div class="container">
+			<div class="product-summary">
+				<div class="product-image" alt="Image" class="img-fluid">
+					<img src="static/images/product1.jpg">
+				</div>
+
+				<div class="product-caption">
+					<div class="product-name">이지 하네스 시어링 집업 & 리쉬</div>
+					<div class="product-price">69,900원</div>
+					<div class="product-option">
+						<select name="option-selectbox" id="" class="option-selectbox">
+							<option class="option_name" value="none">색상</option>
+							<option class="option_value" value="네이비">네이비</option>
+							<option class="option_value" value="화이트">화이트</option>
+							<option class="option_value" value="옐로우">옐로우</option>
+						</select>
+						<select name="option-selectbox" id="" class="option-selectbox">
+							<option class="option_name" value="none">사이즈</option>
+							<option class="option_value" value="XS">XS</option>
+							<option class="option_value" value="S">S</option>
+							<option class="option_value" value="M">M</option>
+							<option class="option_value" value="L">L</option>
+							<option class="option_value" value="XL">XL</option>
+						</select>
+					</div>
+					<div class="purchase-btn">
+						<p><a href="" class="btn btn-white-outline">장바구니</a> <a href="#" class="btn btn-secondary me-2">바로구매</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Product Section -->
+
+	<!-- Start Product detail Section -->
+	<div class="why-choose-section">
+		<div class="container">
+			<div class="row my-5">
+
+			</div>
+		</div>
+	</div>
+	<!-- End Why Choose Us Section -->
+
+	<!-- Start Review Section -->
+	{% comment %} {% include 'Review.html' %} {% endcomment %}
+
+	{% include 'footer.html' %}
+
+	<script src="js/bootstrap.bundle.min.js"></script>
+	<script src="js/tiny-slider.js"></script>
+	<script src="js/custom.js"></script>
+</body>
+
+</html>
