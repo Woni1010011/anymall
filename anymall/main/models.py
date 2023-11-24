@@ -3,6 +3,9 @@ from django.db import models
 # Create your models here.
 
 
+
+
+    # category_id Product reference 아닐 경우 Category 로 edit
 class Grade(models.Model):
     grade = models.CharField(max_length=20, unique=True)
     discount = models.DecimalField(max_digits=5, decimal_places=2)
@@ -25,10 +28,15 @@ class User(models.Model):
     def __str__(self):
         return self.user_name
     
+class Category(models.Model) :
+    category_id = models.AutoField(primary_key=True)
+    category_name = models.CharField(max_length=20)
+    pass
+
     
 class Product(models.Model) :
     product_no = models.AutoField(primary_key=True)
-    category_id = models.ForeignKey(Category, on_delate=models.CASCADE)
+    category_id = models.ForeignKey(Category, on_delete=models.CASCADE)
     product_name = models.CharField(max_length=50)
     product_price = models.IntegerField(default=0)
     is_option = models.BooleanField(default=True)
@@ -42,8 +50,29 @@ class Product(models.Model) :
 
     pass
 
+
+class Stock(models.Model):
+    product_no = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="stocks"
+    )
+    category_id = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="categories"
+    )
+
 class ProductImage(models.Model) :
     image = models.ImageField(upload_to='product_images/')
 
     def __str__(self) :
         return f"Image {self.id}"
+    
+class OptionList(models.Model):
+    option_no = models.AutoField(primary_key=True)
+    product_no = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="options"
+    )
+    option_name = models.CharField(max_length=20, null=False)
+    option_value = models.CharField(max_length=20, null=False)
+    option_amount = models.IntegerField(default=0, null=False)
+
+    def __str__(self):
+        return self.option_name
