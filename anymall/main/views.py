@@ -30,3 +30,7 @@ def mypage(request):
     }
 
     return render(request, "mypage.html", context)
+
+
+def admin_set(request):
+    return render(request, "admin_set.html")
