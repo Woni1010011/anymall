@@ -7,6 +7,8 @@ def home(request):
 
 def shop(request):
     return render(request, "shop.html")
+def product(request):
+    return render(request, "product.html")
 
 
 def mypage(request):
