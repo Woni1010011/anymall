@@ -25,3 +25,25 @@ class User(models.Model):
     def __str__(self):
         return self.user_name
     
+    
+class Product(models.Model) :
+    product_no = models.AutoField(primary_key=True)
+    category_id = models.ForeignKey(Category, on_delate=models.CASCADE)
+    product_name = models.CharField(max_length=50)
+    product_price = models.IntegerField(default=0)
+    is_option = models.BooleanField(default=True)
+    product_date = models.DateField(auto_now_add=True)
+    product_thumnail = models.ImageField(upload_to='product_thumnails/')
+    product_description = models.TextField(1000)
+    product_images = models.ManyToManyField('ProductImage', related_name='product_images')
+    is_display = models.BooleanField(default=True)
+    is_for_sale = models.BooleanField(default=True)
+    sales_volume = models.IntegerField(default=0)
+
+    pass
+
+class ProductImage(models.Model) :
+    image = models.ImageField(upload_to='product_images/')
+
+    def __str__(self) :
+        return f"Image {self.id}"
