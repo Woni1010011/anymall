@@ -5,12 +5,19 @@ def home(request):
     user = User.objects.get()
     return render(request, "index.html")
 
+def login_email(request):
+    return render(request, "login_email.html")
+
+def sign_in(request):
+    return render(request, "sign_in.html")
+
+def sign_up(request):
+    return render(request, "sign_up.html")
 
 def shop(request):
     return render(request, "shop.html")
 def product(request):
     return render(request, "product.html")
-
 
 def mypage(request):
     # if request.session.get("user_email"):
