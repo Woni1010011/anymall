@@ -41,3 +41,13 @@ def mypage(request):
 
 def admin_set(request):
     return render(request, "admin_set.html")
+
+from .models import *
+def admin_category(request):
+    if request.method == "POST":
+        category_name = request.POST.get("category_name")
+        category = Category(category_name=category_name)
+        category.save()
+        return redirect("admin_category")
+    else:
+        return render(request, "admin_category.html")
