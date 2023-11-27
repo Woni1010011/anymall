@@ -20,10 +20,6 @@ def product(request):
     return render(request, "product.html")
 
 def mypage(request):
-<<<<<<< HEAD
-    return render(request, "mypage.html")
-
-=======
     # if request.session.get("user_email"):
     #     user_email = request.session["user_email"]
 
@@ -45,4 +41,3 @@ def mypage(request):
 
 def admin_set(request):
     return render(request, "admin_set.html")
->>>>>>> main
