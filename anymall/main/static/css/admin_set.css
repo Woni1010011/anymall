@@ -10,6 +10,7 @@ a {
     font-size: 14px;
     font-weight: bold;
 }
+
 /* header part */
 .header {
     display: flex;
@@ -59,6 +60,7 @@ a {
     flex-direction: row;
     gap: 20px;
 }
+
 /* header part end */
 
 /* aside part */
@@ -95,6 +97,7 @@ a {
     font-size: 15px;
     padding: 10px 0;
 }
+
 /* aside part end*/
 
 /* content part */
@@ -156,7 +159,7 @@ main {
     width: 800px;
 }
 
-.st_pic_img p{
+.st_pic_img p {
     width: 800px;
     height: 0px;
     font-size: 14px;
@@ -245,7 +248,7 @@ main {
     height: 25px;
 }
 
-.price label{
+.price label {
     border: 1px solid #505050;
     padding: 5.5px;
 }
@@ -292,4 +295,20 @@ main {
     cursor: pointer;
     margin-top: 20px;
 }
+
+.delete_box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.delete_box button {
+    width: 50px;
+    height: 30px;
+    border: 1px solid #ccc;
+    font-weight: bold;
+    background-color: transparent;
+    cursor: pointer;
+}
+
 /* content part end*/

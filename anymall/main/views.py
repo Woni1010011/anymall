@@ -66,4 +66,13 @@ def admin_category(request):
         category.save()
         return redirect("admin_category")
     else:
+        categories = Category.objects.all()
+        return render(request, "admin_category.html", {"categories": categories})
+
+def delete_category(request, category_id):
+    if request.method == "POST":
+        category = Category.objects.get(pk=category_id)
+        category.delete()
+        return redirect("admin_category")
+    else:
         return render(request, "admin_category.html")
