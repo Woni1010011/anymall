@@ -70,7 +70,7 @@ ROOT_URLCONF = "anymall.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        'DIRS': [],
+        "DIRS": [],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -97,9 +97,10 @@ DATABASES = {
         "PASSWORD": get_secret("PASSWORD"),
         "HOST": get_secret("HOST"),
         "PORT": get_secret("PORT"),
+        "AWS_ACCESS_KEY_ID": get_secret("AWS_ACCESS_KEY_ID"),
+        "AWS_SECRET_ACCESS_KEY": get_secret("AWS_SECRET_ACCESS_KEY"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -136,7 +137,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 
 
 # Default primary key field type

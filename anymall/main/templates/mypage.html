@@ -39,8 +39,8 @@
                         <a href="#change_user_info">회원정보변경</a>
                     </div>
                     <div class="user_grade">
-                        <strong>LV.1 브론즈</strong>
-                        <h5>가입일 : 2023.11.22</h5>
+                        <strong>{{user_grade}}</strong>
+                        <h5>가입일 : {{sub_date}}</h5>
                     </div>
                     <div class="grade_info">
                         <strong>{{user_name}}님 다음 등급인 실버까지 500점 남았습니다.</strong>
@@ -52,7 +52,7 @@
                 <div class="point">
                     <img src="" alt="">
                     <strong>포인트 ></strong>
-                    <form action="">100</form>
+                    <form action="">{{user_point}}</form>
                 </div>
                 <div class="after_write">
                     <img src="" alt="">
@@ -93,17 +93,17 @@
                     <button>사진 변경</button>
                 </div>
                 <div class="st_pic_info">
-                    <p>아이디</p>
-                    <strong>AnyMall</strong>
+                    <p>이메일</p>
+                    <strong>{{user_email}}</strong>
                 </div>
                 <div class="st_pic_info">
                     <p>비밀번호</p>
-                    <strong>********</strong>
+                    <strong>{{user_password}}</strong>
                     <button>비밀번호 변경</button>
                 </div>
                 <div class="st_pic_info">
                     <p>이름(실명)</p>
-                    <strong>AnyMall</strong>
+                    <strong>{{user_name}}</strong>
                     <button>이름수정</button>
                 </div>
                 <div class="st_pic_info">
@@ -113,12 +113,12 @@
                 </div>
                 <div class="st_pic_info">
                     <p>이메일</p>
-                    <strong>AnyMall**@*****.com</strong>
+                    <strong>{{user_email}}</strong>
                     <button>이메일 변경</button>
                 </div>
                 <div class="st_pic_info">
                     <p>휴대전화</p>
-                    <strong>010-****-1234</strong>
+                    <strong>{{user_phone}}</strong>
                     <button>휴대전화 변경</button>
                 </div>
             </div>

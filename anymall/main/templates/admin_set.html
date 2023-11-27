@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Page</title>
+    <title>Anymall</title>
     <link rel="stylesheet" href="/static/css/admin_set.css">
 </head>
 <body>
@@ -50,16 +50,6 @@
                         <p>쇼핑검색에 노출되지 않는 경우 도움말 () 또는 상품검색 SEO 가이드 '이미지' 항목을 참고해 주세요.</p>
                     </div>
                 </div>
-                <div class="st_pic">
-                    <p>추가이미지</p>
-                    <div class="st_pic_img">
-                        <img src="" alt="">
-                        <button>순서 변경</button>
-                        <p>권장 크기: 1000 X 1000(윈도 대상 750 X 1000)</p>
-                        <p>추가이미지는 최대 9개까지 설정할 수 있습니다.</p>
-                        <p>jpg,jpeg,gif,png,bmp 형식의 정지 이미지만 등록됩니다.(움직이는 이미지의 경우 첫 번째 컷이 등록</p>
-                    </div>
-                </div>
             </div>
             <div class="goods_info">
                 <div class="standard">
@@ -103,7 +93,7 @@
                     <p>네이버 쇼핑을 통한 주문일 경우 네이버쇼핑 매출연동수수료 2%가 네이버페이 결제수수료와 별도로 과금됩니다.</p>
                     <p>판매가, 할인가를 활용한 비정상 거래는 자동 탐지되어 판매지수에 포함되지 않으니 유의해주세요.</p>
                 </div>
-                <div class="discount_box">
+                <!-- <div class="discount_box">
                     <p>할인</p>
                     <div class="discount">
                         <button>설정함</button>
@@ -124,7 +114,7 @@
                         <button>면세상품</button>
                         <button>영세상품</button>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="goods_info">
                 <div class="standard">
@@ -156,14 +146,27 @@
                     <strong>상세설명</strong>
                     <p>필수</p>
                 </div>
+                <div class="st_pic">
+                    <p>상세이미지</p>
+                    <div class="st_pic_img">
+                        <img src="" alt="">
+                        <p>권장 크기: 1280 X 1920</p>
+                        <p>jpg,jpeg,gif,png,bmp 형식의 정지 이미지만 등록됩니다.</p>
+                    </div>
+                </div>
             </div>
             <div class="goods_info">
                 <div class="standard">
                     <strong>상품 주요정보</strong>
                     <p>선택</p>
                 </div>
+                <div class="goods_option">
+                    <input type="text" id="goods_option_input" placeholder="숫자만 입력">
+                    <label for="goods_option_input">원</label>
+                    <p>상품의 정보를 간략하게 적어주세요.</p>
+                </div>
             </div>
-            <div class="goods_info">
+            <!-- <div class="goods_info">
                 <div class="standard">
                     <strong>상품정보제공고시</strong>
                     <p>선택</p>
@@ -198,7 +201,7 @@
                     <strong>구매/혜택 조건</strong>
                     <p>선택</p>
                 </div>
-            </div>
+            </div> -->
         </main>
     </div>
 </body>
