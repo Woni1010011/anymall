@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+
 
 # Create your models here.
 
@@ -7,26 +9,26 @@ from django.db import models
 
     # category_id Product reference 아닐 경우 Category 로 edit
 class Grade(models.Model):
-    grade = models.CharField(max_length=20, unique=True)
-    discount = models.DecimalField(max_digits=5, decimal_places=2)
+    grade_id = models.AutoField(primary_key=True)
+    grade = models.CharField(max_length=20, null=True, blank=True)
+    discount = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return self.grade
-class User(models.Model):
-    user_no = models.AutoField(primary_key=True)
-    user_email = models.EmailField(unique=True)
-    user_password = models.CharField(max_length=255)
-    user_name = models.CharField(max_length=50)
-    user_phone = models.CharField(max_length=20, null=True, blank=True)
-    zip_code = models.CharField(max_length=10, null=True, blank=True)
-    user_address = models.TextField(null=True, blank=True)
+        return f"{self.grade} - Discount: {self.discount}%"
+    
+class CustomUser(AbstractUser):
+    # AbstractUser에서 username, email, first_name, last_name 등의 필드를 이미 제공하므로 중복되지 않게 주의
+    user_no = models.BigAutoField(primary_key=True)
+    # email 필드는 AbstractUser에서 제공하므로 추가할 필요 없음
+    user_phone = models.CharField(max_length=11, unique=True)
+    zip_code = models.IntegerField(null=True, blank=True)
+    user_address = models.CharField(max_length=200, null=True, blank=True)
     user_point = models.IntegerField(default=0)
-    is_email = models.BooleanField(default=True)
-    sub_date = models.DateField(auto_now_add=True)
-    grade = models.ForeignKey(Grade, on_delete=models.SET_NULL, null=True, blank=True)
-
-    def __str__(self):
-        return self.user_name
+    email_check = models.CharField(max_length=5, null=True, blank=True)
+    user_type = models.IntegerField(null=True, blank=True)
+    sub_date = models.DateTimeField(auto_now_add=True)
+    # Grade 모델을 참조하는 외래 키
+    grade = models.ForeignKey('Grade', on_delete=models.CASCADE)
     
 class Category(models.Model) :
     category_id = models.AutoField(primary_key=True)
