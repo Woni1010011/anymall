@@ -13,8 +13,8 @@
 
 .body {
     position: relative;
-    width: 800px;
-    height: 490px;
+    width: 840px;
+    height: 520px;
     margin: 20px auto;
     border: 1px solid #dddd;
     border-radius: 18px;
@@ -68,15 +68,16 @@
 }
 
 .btn.btn-primary {
-    background-color: transparent;
+    background-color: transparent !important;
     color: #3B5D4F;
-    border: 0px;
+    border: none;
     padding: 0;
-    font-size: 14px;
+    font-size: 18px; /* 원하는 폰트 크기로 조정 */
+    font-weight: bold; /* 굵게 만들기 */
 }
 
 .btn.btn-primary .fas.fa-chevron-right {
-    font-size: 12px;
+    font-size: 18px;
 }
 
 .footer .p-color {
@@ -93,7 +94,6 @@
     right: 20px;
     height: 20px;
     width: 20px;
-    background-color: #f3cff379;
     font-size: 18px;
     display: flex;
     align-items: center;
