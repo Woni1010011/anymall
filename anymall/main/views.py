@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import User, Product
+from .models import CustomUser, Product  # 이렇게 변경합니다.
 
 def home(request):
-    user = User.objects.get()
+    user = CustomUser.objects.get()  # User 대신 CustomUser를 사용합니다.
     return render(request, "index.html")
 
 def login_email(request):
@@ -28,24 +28,33 @@ def shop(request):
 def product(request):
     return render(request, "product.html")
 
+# def mypage(request):
+#     # if request.session.get("user_email"):
+#     #     user_email = request.session["user_email"]
+
+#     #     try:
+#     #         user = User.objects.get(user_email=user_email)
+#     #         return render(request, "mypage.html", user)
+#     #     except User.DoesNotExist:
+#     #         return redirect("home")
+
+#     user = get_object_or_404(CustomUser, user_no=8)  # User 대신 CustomUser를 사용합니다.
+
+
+#     context = {
+#         "user_name" : user.user_name
+#     }
+
+#     return render(request, "mypage.html", context)
 def mypage(request):
-    # if request.session.get("user_email"):
-    #     user_email = request.session["user_email"]
+    if request.session.get("user_email"):
+        user_email = request.session["user_email"]
 
-    #     try:
-    #         user = User.objects.get(user_email=user_email)
-    #         return render(request, "mypage.html", user)
-    #     except User.DoesNotExist:
-    #         return redirect("home")
-
-    user = get_object_or_404(User, user_no=8)
-
-
-    context = {
-        "user_name" : user.user_name
-    }
-
-    return render(request, "mypage.html", context)
+        try:
+            user = CustomUser.objects.get(user_email=user_email)  # User 대신 CustomUser를 사용합니다.
+            return render(request, "mypage.html", {'user': user})
+        except CustomUser.DoesNotExist:
+            return redirect("home")
 
 
 def admin_set(request):
