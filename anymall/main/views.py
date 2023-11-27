@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import User
+from .models import User, Product
 
 def home(request):
     user = User.objects.get()
@@ -7,7 +7,16 @@ def home(request):
 
 
 def shop(request):
-    return render(request, "shop.html")
+
+    product = Product.objects.all()
+
+    context = {
+        'products':product
+    }
+    print(context)
+    return render(request, "shop.html", context)
+
+
 def product(request):
     return render(request, "product.html")
 
