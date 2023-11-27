@@ -42,7 +42,13 @@ def mypage(request):
 
 
     context = {
-        "user_name" : user.user_name
+        "user_name" : user.user_name,
+        "user_email" : user.user_email,
+        "user_password" : user.user_password,
+        "user_phone" : user.user_phone,
+        "user_poing" : user.user_point,
+        "user_grade" : user.grade,
+        "sub_date" : user.sub_date
     }
 
     return render(request, "mypage.html", context)
@@ -52,6 +58,7 @@ def admin_set(request):
     return render(request, "admin_set.html")
 
 from .models import *
+
 def admin_category(request):
     if request.method == "POST":
         category_name = request.POST.get("category_name")
