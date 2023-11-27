@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import User
+from .models import User, Product
 
 def home(request):
     user = User.objects.get()
@@ -15,7 +15,16 @@ def sign_up(request):
     return render(request, "sign_up.html")
 
 def shop(request):
-    return render(request, "shop.html")
+
+    product = Product.objects.all()
+
+    context = {
+        'products':product
+    }
+    print(context)
+    return render(request, "shop.html", context)
+
+
 def product(request):
     return render(request, "product.html")
 
@@ -41,3 +50,13 @@ def mypage(request):
 
 def admin_set(request):
     return render(request, "admin_set.html")
+
+from .models import *
+def admin_category(request):
+    if request.method == "POST":
+        category_name = request.POST.get("category_name")
+        category = Category(category_name=category_name)
+        category.save()
+        return redirect("admin_category")
+    else:
+        return render(request, "admin_category.html")
