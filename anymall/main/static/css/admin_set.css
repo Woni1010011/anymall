@@ -1,0 +1,294 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+/* header part */
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: rgb(59, 93, 79);
+    color: white;
+    align-items: center;
+    text-align: center;
+    padding: 10px 30px;
+    gap: 20px;
+}
+
+.search_container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    height: 30px;
+    overflow: hidden;
+}
+
+.search_container button {
+    width: 35px;
+    height: 35px;
+    padding: 0px;
+    background-color: rgb(71, 71, 71);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search_container button:hover {
+    background-color: rgb(0, 0, 0);
+}
+
+.search_container input[type="text"] {
+    width: 230px;
+    height: 32px;
+    padding: 0 5px;
+    margin-right: -5px;
+    box-sizing: border-box;
+}
+
+.category_containor {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+/* header part end */
+
+/* aside part */
+.mypage-container {
+    display: flex;
+    padding: 0px 30px;
+}
+
+.sidebar {
+    width: 200px;
+    padding-top: 40px;
+    margin-right: 100px;
+    border-right: 1px solid #ccc;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav button {
+    font-size: 22px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    background-color: white;
+}
+
+.sidebar nav ul li a {
+    text-decoration: none;
+    color: rgb(110, 110, 110);
+    display: block;
+    font-size: 15px;
+    padding: 10px 0;
+}
+/* aside part end*/
+
+/* content part */
+main {
+    display: flex;
+    flex-direction: column;
+}
+
+.goods_info {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.standard {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    width: 1540px;
+    border-bottom: 3px solid black;
+}
+
+.standard strong {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.standard p {
+    font-size: 22px;
+    font-weight: bold;
+    color: #ccc;
+}
+
+.st_pic {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0px;
+}
+
+.st_pic p {
+    width: 180px;
+    height: 140px;
+}
+
+.st_pic button {
+    width: 100px;
+    height: 32px;
+    border: 1px solid #ccc;
+    font-weight: bold;
+    background-color: transparent;
+}
+
+.st_pic_img {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0px;
+    width: 800px;
+}
+
+.st_pic_img p{
+    width: 800px;
+    height: 0px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.st_pic_img img {
+    width: 150px;
+    height: 150px;
+    border: 1px solid black;
+}
+
+.st_pic_img button {
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+.st_pic_info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.st_pic_info p {
+    display: flex;
+    width: 180px;
+    height: 40px;
+    align-items: center;
+}
+
+.st_pic_info strong {
+    width: 800px;
+}
+
+.st_pic_info button {
+    width: 100px;
+    height: 32px;
+    border: 1px solid #ccc;
+    font-weight: bold;
+    background-color: transparent;
+}
+
+.category_box button {
+    width: 120px;
+    height: 32px;
+    border: 1px solid #ccc;
+    font-weight: bold;
+    background-color: transparent;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.category_box p, .goods_name p, .price p, .stock p {
+    font-size: 12px;
+}
+
+.text_input {
+    width: 1530px;
+    height: 25px;
+}
+
+.goods_name {
+    margin-top: 20px;
+}
+
+.goods_name label {
+    border: 1px solid #505050;
+    padding: 5.5px;
+}
+
+#name_input {
+    width: 1430px;
+    height: 25px;
+}
+
+.price {
+    width: 1530px;
+    padding: 20px 0px;
+    border-bottom: 1px solid #ccc;
+}
+
+#price_input {
+    width: 200px;
+    height: 25px;
+}
+
+.price label{
+    border: 1px solid #505050;
+    padding: 5.5px;
+}
+
+.discount_box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0px;
+}
+
+.discount_box p {
+    width: 180px;
+    height: 20px;
+}
+
+.discount_box button {
+    width: 100px;
+    height: 32px;
+    border: 1px solid #ccc;
+    font-weight: bold;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.stock {
+    width: 1530px;
+    padding: 20px 0px;
+    border-bottom: 1px solid #ccc;
+}
+
+#stock_input, #option_input {
+    width: 200px;
+    height: 25px;
+}
+
+.option button {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    font-weight: bold;
+    background-color: transparent;
+    cursor: pointer;
+    margin-top: 20px;
+}
+/* content part end*/
