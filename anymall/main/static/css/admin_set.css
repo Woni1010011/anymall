@@ -208,9 +208,10 @@ main {
     background-color: transparent;
     margin-top: 20px;
     margin-bottom: 20px;
+    cursor: pointer;
 }
 
-.category_box p, .goods_name p, .price p, .stock p {
+.category_box p, .goods_name p, .price p, .stock p, .goods_option p{
     font-size: 12px;
 }
 
@@ -271,13 +272,13 @@ main {
     cursor: pointer;
 }
 
-.stock {
+.stock, .goods_option {
     width: 1530px;
     padding: 20px 0px;
     border-bottom: 1px solid #ccc;
 }
 
-#stock_input, #option_input {
+#stock_input, #option_input, #goods_option_input {
     width: 200px;
     height: 25px;
 }
