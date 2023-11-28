@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Page</title>
+    <title>Admin Page</title>
     <link rel="stylesheet" href="/static/css/admin_set.css">
 </head>
 <body>
@@ -63,9 +63,9 @@
                     {% for category in categories %}
                     <div class='delete_box'>
                         {{ category.category_name }}
-                        <form method="POST" action="{% url 'delete_category' category_id=category.category_id %}" >
-                        {% csrf_token %}
-                        <button type="submit">삭제</button>
+                        <form method="POST" action="{% url 'delete_category' category_id=category.category_id %}" onsubmit="return confirmDelete(event, '{{ category.category_name }}')">
+                            {% csrf_token %}
+                            <button type="submit">삭제</button>
                         </form>
                     </div>
                     {% endfor %}
@@ -83,5 +83,15 @@
             menu.style.display = 'none';
         }
     });
+</script>
+<script>
+    function confirmDelete(event, categoryName) {
+        var result = confirm(categoryName + " 카테고리를 삭제하시겠습니까?");
+        return result;
+    }
+    {% if result %}
+    alert("{{ result }}");
+    window.history.back();
+    {% endif %}
 </script>
 </html>
