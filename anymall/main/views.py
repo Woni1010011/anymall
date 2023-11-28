@@ -60,21 +60,10 @@ def mypage(request):
 
 
     context = {
-        "user_name" : user.user_name,
-        "user_email" : user.user_email,
-        "user_password" : user.user_password,
-        "user_phone" : user.user_phone,
-        "user_poing" : user.user_point,
-        "user_grade" : user.grade,
-        "sub_date" : user.sub_date
+        "user_name" : user.user_name
     }
 
     return render(request, "mypage.html", context)
-    # try:
-    #     user = CustomUser.objects.get(user_email=user_email)  # User 대신 CustomUser를 사용합니다.
-    #     return render(request, "mypage.html", {'user': user})
-    # except CustomUser.DoesNotExist:
-    #     return redirect("home")
 
 
 def admin_set(request):
