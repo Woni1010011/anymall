@@ -25,7 +25,7 @@ class CustomUserAdmin(BaseUserAdmin):
     fieldsets = (
         ("User Credentials", {"fields": ("email", "password")}),
         ("Personal info", {"fields": ("first_name", "last_name")}),
-        ("Permissions", {"fields": ("is_admin",)}),
+        ("Permissions", {"fields": ("is_admin","is_superuser")}),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
         (
             "Custom fields",

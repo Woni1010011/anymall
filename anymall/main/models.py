@@ -4,8 +4,10 @@ from django.contrib.auth.models import AbstractBaseUser
 
 # Create your models here.
 
-from django.contrib.auth.models import BaseUserManager  # 임포트
 
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
+from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 # custom user model 사용 시 UserManager 클래스와 create_user, create_superuser 함수가 정의되어 있어야 함
 class UserManager(BaseUserManager):
@@ -29,7 +31,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class CustomUser(AbstractBaseUser):
+class CustomUser(AbstractBaseUser, PermissionsMixin):
     # AbstractUser에서 username, email, first_name, last_name 등의 필드를 이미 제공하므로 중복되지 않게 주의
     user_no = models.BigAutoField(primary_key=True)
     username = models.CharField("사용자 이름", max_length=20, unique=True)
@@ -46,6 +48,7 @@ class CustomUser(AbstractBaseUser):
 
     # 관리자 권한 여부 (기본값은 False)
     is_admin = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
 
     # 실제 로그인에 사용되는 아이디
     USERNAME_FIELD = "email"
@@ -75,6 +78,23 @@ class CustomUser(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+    
+    groups = models.ManyToManyField(
+        Group,
+        verbose_name=_('groups'),
+        blank=True,
+        help_text=_('The groups this user belongs to.'),
+        related_name="user_set",
+        related_query_name="user",
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        verbose_name=_('user permissions'),
+        blank=True,
+        help_text=_('Specific permissions for this user.'),
+        related_name="user_set",
+        related_query_name="user",
+    )
 
 
 class Category(models.Model):
