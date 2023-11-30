@@ -12,12 +12,16 @@ from django.utils.translation import gettext_lazy as _
 # custom user model 사용 시 UserManager 클래스와 create_user, create_superuser 함수가 정의되어 있어야 함
 class UserManager(BaseUserManager):
     # 필수로 필요한 데이터를 선언
-    def create_user(self, email, username, password=None):
+    def create_user(self, email, username, password=None, user_phone=None, zip_code=None, user_address=None):
         if not username:
             raise ValueError("Users must have an username")
         user = self.model(
-            email=email,
-            username=username,
+            email=email, 
+            username=username, 
+            password=password, 
+            user_phone=user_phone,
+            zip_code=zip_code,
+            user_address=user_address,
         )
         user.set_password(password)
         user.save(using=self._db)

@@ -28,15 +28,15 @@
                         <p class="text-muted mb-2">Continue with...</p>
                         <br>
                         <div class="d-flex align-items-center">
-                            <a href="#" class="box me-2 selectio">
-                                <span class="fab fa-facebook-f mb-2"></span>
-                                <p class="mb-0">Facebook</p>
+                            <a href="{% url 'social:begin' 'kakao' %}" class="box me-2 selectio">
+                                <img src="{% static 'path/to/kakao-icon.png' %}" alt="Kakao" class="mb-2" /> <!-- 카카오 아이콘 -->
+                                <p class="mb-0">Kakao</p>
                             </a>
                             <a href="#" class="box me-2">
                                 <span class="fab fa-google mb-2"></span>
                                 <p class="mb-0">Google</p>
                             </a>
-                            <a href="#" class="box">
+                            <a href="sign_up" class="box">
                                 <span class="far fa-envelope mb-2"></span>
                                 <p class="mb-0">Email</p>
                             </a>
