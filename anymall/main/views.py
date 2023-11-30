@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from .models import *
+from .forms import *
 
 def home(request):
     # user = CustomUser.objects.get()  # User 대신 CustomUser를 사용합니다.
@@ -22,12 +23,16 @@ def shop(request):
     context = {
         'products':product
     }
-    print(context)
     return render(request, "shop.html", context)
 
 
-def product(request):
-    return render(request, "product.html")
+def product(request, product_no):
+    product = get_object_or_404(Product, product_no=product_no)
+
+    context = {
+        'product':product
+    }
+    return render(request, "product.html", context)
 
 # def mypage(request):
 #     # if request.session.get("user_email"):
@@ -66,10 +71,6 @@ def mypage(request):
 
     return render(request, "mypage.html", context)
 
-
-def admin_set(request):
-    return render(request, "admin_set.html")
-
 def admin_category(request):
     if request.method == "POST":
         category_name = request.POST.get("category_name")
@@ -80,15 +81,12 @@ def admin_category(request):
         categories = Category.objects.all()
         return render(request, "admin_category.html", {"categories": categories})
 
-from django.shortcuts import render, redirect
-from .models import Category, Product
 
 def delete_category(request, category_id):
     template = "admin_category.html"
     if request.method == "POST":
         category = Category.objects.get(pk=category_id)
 
-        # 카테고리가 Product 모델에서 사용 중인지 확인
         if Product.objects.filter(category_id=category_id).exists():
             context = {"result": "이 카테고리는 하나 이상의 제품과 연관되어 있어 삭제할 수 없습니다."}
             return render(request, template, context)
@@ -97,3 +95,26 @@ def delete_category(request, category_id):
             return redirect("admin_category")
     else:
         return render(request, template, context)
+
+from django.views.generic.edit import View
+
+def admin_set(request):
+    category = Category.objects.all()
+
+    if request.method == "POST":
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.save()
+            return redirect("shop")
+        else:
+            print("폼 유효성 검사 실패:", form.errors)
+    else:
+        form = ProductForm()
+
+    context = {
+        'category': category,
+        'form': form,
+    }
+
+    return render(request, "admin_set.html", context)
