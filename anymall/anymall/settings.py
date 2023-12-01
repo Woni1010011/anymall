@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os, json
 from django.core.exceptions import ImproperlyConfigured
+from storages.backends.s3boto3 import S3Boto3Storage
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -54,8 +55,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "main",
     "anymall_admin",
-    'social_django',
-
+    "social_django",
 ]
 
 MIDDLEWARE = [
@@ -88,7 +88,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "anymall.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -100,8 +99,6 @@ DATABASES = {
         "PASSWORD": get_secret("PASSWORD"),
         "HOST": get_secret("HOST"),
         "PORT": get_secret("PORT"),
-        "AWS_ACCESS_KEY_ID": get_secret("AWS_ACCESS_KEY_ID"),
-        "AWS_SECRET_ACCESS_KEY": get_secret("AWS_SECRET_ACCESS_KEY"),
     }
 }
 
@@ -123,16 +120,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'main.CustomUser'
+AUTH_USER_MODEL = "main.CustomUser"
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.kakao.KakaoOAuth2',  # 카카오 소셜 로그인 백엔드
-    'django.contrib.auth.backends.ModelBackend',  # 기본 Django 인증 백엔드
+    "social_core.backends.kakao.KakaoOAuth2",  # 카카오 소셜 로그인 백엔드
+    "django.contrib.auth.backends.ModelBackend",  # 기본 Django 인증 백엔드
     # 필요에 따라 다른 인증 백엔드를 추가할 수 있습니다.
 )
 
-SOCIAL_AUTH_KAKAO_KEY = '58eeb0c86fb4689361cb796dfe74b2e1'
-SOCIAL_AUTH_KAKAO_REDIRECT_URI = 'http://127.0.0.1:8000/social-auth/complete/kakao/'  # 개발 중일 때의 예시 URL
+SOCIAL_AUTH_KAKAO_KEY = "58eeb0c86fb4689361cb796dfe74b2e1"
+SOCIAL_AUTH_KAKAO_REDIRECT_URI = (
+    "http://127.0.0.1:8000/social-auth/complete/kakao/"  # 개발 중일 때의 예시 URL
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -150,6 +149,31 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+
+# 사진 저장 공간 설정
+# AWS S3 셋팅
+AWS_REGION = "ap-northeast-2"
+AWS_STORAGE_BUCKET_NAME = get_secret("BUCKET_NAME")
+AWS_ACCESS_KEY_ID = get_secret("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = get_secret("AWS_SECRET_ACCESS_KEY")
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+print(AWS_S3_CUSTOM_DOMAIN)
+
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+# media로 접근하면 media 파일에서 꺼내서 넘겨준다는 의미
+# media 파일이 로컬에 저장될 경로
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+# AWS S3에서 media 파일을 불러올 URL
+MEDIA_URL = f"http://{AWS_S3_CUSTOM_DOMAIN}/media/"
+
+
+# # Media 파일을 저장할 S3 경로 및 설정
+# class MediaStorage(S3Boto3Storage):
+#     # AWS S3 버킷 내의 저장 위치
+#     location = "media"
+#     # 기존 파일 덮어쓰기 방지
+#     file_overwrite = False
 
 
 # Default primary key field type
