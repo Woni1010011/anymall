@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "main",
     "anymall_admin",
+    'social_django',
+
 ]
 
 MIDDLEWARE = [
@@ -122,6 +124,15 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'main.CustomUser'
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.kakao.KakaoOAuth2',  # 카카오 소셜 로그인 백엔드
+    'django.contrib.auth.backends.ModelBackend',  # 기본 Django 인증 백엔드
+    # 필요에 따라 다른 인증 백엔드를 추가할 수 있습니다.
+)
+
+SOCIAL_AUTH_KAKAO_KEY = '58eeb0c86fb4689361cb796dfe74b2e1'
+SOCIAL_AUTH_KAKAO_REDIRECT_URI = 'http://127.0.0.1:8000/social-auth/complete/kakao/'  # 개발 중일 때의 예시 URL
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

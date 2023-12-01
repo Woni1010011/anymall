@@ -26,18 +26,19 @@
                 <div class="mt-5">
                     <div class="d-flex flex-column ">
                         <h3 class="text-center mb-4 font-weight-bold">회원가입</h3>
-                        <form class="form-card" onsubmit="event.preventDefault()">
+                        <form class="form-card" action="{% url 'sign_up' %}" method="post">
+                            {% csrf_token %}
                             <div class="row justify-content-between text-left">
                                 <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">이름<span class="text-danger"> *</span></label> <input type="text" id="name" name="name" placeholder="" onblur="validate(1)"> </div>
                                 <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">이메일<span class="text-danger"> *</span></label> <input type="text" id="email" name="email" placeholder="" onblur="validate(2)"> </div>
                             </div>
                             <div class="row justify-content-between text-left">
-                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">비밀번호<span class="text-danger"> *</span></label> <input type="text" id="pwd" name="pwd" placeholder="" onblur="validate(3)"> </div>
-                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">비밀번호 확인<span class="text-danger"> *</span></label> <input type="text" id="pwd_check" name="pwd_check" placeholder="" onblur="validate(4)"> </div>
+                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">비밀번호<span class="text-danger"> *</span></label> <input type="password" id="pwd" name="pwd" placeholder="" onblur="validate(3)"></div>
+                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">비밀번호 확인<span class="text-danger"> *</span></label> <input type="password" id="pwd_check" name="pwd_check" placeholder="" onblur="validate(4)"> </div>
                             </div>
                             <div class="row justify-content-between text-left">
-                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">전화번호<span class="text-danger"> *</span></label> <input type="text" id="phone" name="phone" placeholder="" onblur="validate(5)"> </div>
-                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">생년월일<span class="text-danger"> *</span></label> <input type="text" id="birth" name="birth" placeholder="" onblur="validate(8)"> </div>
+                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">전화번호<span class="text-danger"> *</span></label> <input type="tel" id="phone" name="phone" placeholder="" onblur="validate(5)"> </div>
+                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">생년월일<span class="text-danger"> *</span></label> <input type="date" id="birth" name="birth" placeholder="" onblur="validate(8)"> </div>
                             </div>
                             <div class="row justify-content-between text-left">
                                 <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">우편번호<span class="text-danger"> *</span></label> <input type="text" id="post_code" name="post_code" placeholder="" onblur="validate(6)"> </div>
