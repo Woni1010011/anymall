@@ -1,5 +1,4 @@
-{% load static %}
-
+{% load static %}    
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,46 +18,83 @@
     <div class="container">
         <div class="body d-md-flex align-items-center justify-content-between">
             <div class="box-1 mt-md-0 mt-5">
-                <img src="https://images.squarespace-cdn.com/content/v1/54e7a1a6e4b08db9da801ded/1630594252778-BTI3A9SEV293HMQ443UB/10.png"
-                    class="" alt="">
+                <!-- 이미지 삽입 부분 -->
+                <img src="https://images.squarespace-cdn.com/content/v1/54e7a1a6e4b08db9da801ded/1630594252778-BTI3A9SEV293HMQ443UB/10.png" alt="">
             </div>
-            <div class=" box-2 d-flex flex-column h-100">
+            <div class="box-2 d-flex flex-column h-100">
                 <div class="mt-5">
-                    <div class="d-flex flex-column ">
-                        <h3 class="text-center mb-4 font-weight-bold">회원가입</h3>
+                    <h3 class="text-center mb-4 font-weight-bold">회원가입</h3>
+                    <div class="container">
+                        <!-- 서버로부터 전달된 메시지 표시 -->
+                        {% if messages %}
+                            <div class="alert alert-danger" role="alert">
+                                {% for message in messages %}
+                                    {{ message }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <!-- 회원가입 폼 -->
                         <form class="form-card" action="{% url 'sign_up' %}" method="post">
                             {% csrf_token %}
+                            <!-- 폼 필드들... -->
                             <div class="row justify-content-between text-left">
-                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">이름<span class="text-danger"> *</span></label> <input type="text" id="name" name="name" placeholder="" onblur="validate(1)"> </div>
-                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">이메일<span class="text-danger"> *</span></label> <input type="text" id="email" name="email" placeholder="" onblur="validate(2)"> </div>
+                                <!-- 이름 입력 필드 -->
+                                <div class="form-group col-sm-6 flex-column d-flex"> 
+                                    <label class="form-control-label px-3">이름<span class="text-danger"> *</span></label> 
+                                    <input type="text" id="name" name="name" placeholder="" onblur="validate(1)"> 
+                                </div>
+                                <!-- 이메일 입력 필드 -->
+                                <div class="form-group col-sm-6 flex-column d-flex"> 
+                                    <label class="form-control-label px-3">이메일<span class="text-danger"> *</span></label> 
+                                    <input type="text" id="email" name="email" placeholder=""  onblur="validate(2)"> 
+                                </div>
                             </div>
+                            <!-- 비밀번호, 비밀번호 확인 -->
                             <div class="row justify-content-between text-left">
-                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">비밀번호<span class="text-danger"> *</span></label> <input type="password" id="pwd" name="pwd" placeholder="" onblur="validate(3)"></div>
-                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">비밀번호 확인<span class="text-danger"> *</span></label> <input type="password" id="pwd_check" name="pwd_check" placeholder="" onblur="validate(4)"> </div>
+                                <div class="form-group col-sm-6 flex-column d-flex"> 
+                                    <label class="form-control-label px-3">비밀번호<span class="text-danger"> *</span></label> 
+                                    <input type="password" id="pwd" name="pwd" placeholder="" onblur="validate(3)">
+                                </div>
+                                <div class="form-group col-sm-6 flex-column d-flex"> 
+                                    <label class="form-control-label px-3">비밀번호 확인<span class="text-danger"> *</span></label> 
+                                    <input type="password" id="pwd_check" name="pwd_check" placeholder="" onblur="validate(4)"> 
+                                </div>
                             </div>
+                            <!-- 전화번호, 우편번호 -->
                             <div class="row justify-content-between text-left">
-                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">전화번호<span class="text-danger"> *</span></label> <input type="tel" id="phone" name="phone" placeholder="" onblur="validate(5)"> </div>
-                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">생년월일<span class="text-danger"> *</span></label> <input type="date" id="birth" name="birth" placeholder="" onblur="validate(8)"> </div>
+                                <div class="form-group col-sm-6 flex-column d-flex"> 
+                                    <label class="form-control-label px-3">전화번호<span class="text-danger"> *</span></label> 
+                                    <input type="tel" id="phone" name="phone" placeholder=""  onblur="validate(5)"> 
+                                </div>
+                                <div class="form-group col-sm-6 flex-column d-flex"> 
+                                    <label class="form-control-label px-3">우편번호<span class="text-danger"> *</span></label> 
+                                    <input type="text" id="post_code" name="post_code" placeholder="" onblur="validate(6)"> 
+                                </div>
                             </div>
+                            <!-- 주소 -->
                             <div class="row justify-content-between text-left">
-                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">우편번호<span class="text-danger"> *</span></label> <input type="text" id="post_code" name="post_code" placeholder="" onblur="validate(6)"> </div>
-                            </div>
-                            <div class="row justify-content-between text-left">
-                                <div class="form-group col-12 flex-column d-flex"> <label class="form-control-label px-3">주소<span class="text-danger"> *</span></label> <input type="text" id="adress" name="adress" placeholder="" onblur="validate(7)"> </div>
+                                <div class="form-group col-12 flex-column d-flex"> 
+                                    <label class="form-control-label px-3">주소<span class="text-danger"> *</span></label> 
+                                    <input type="text" id="adress" name="adress" placeholder="" onblur="validate(7)"> 
+                                </div>
                             </div>     
                             <br>   
+                            <br>   
                             <div class="row justify-content-end align-items-end">
-                                <div class="form-group col-sm-6 text-right"> <!-- text-right 클래스 추가 -->
+                                <div class="form-group col-sm-6 text-right"> 
+                            <!-- 회원가입 버튼 -->
+                            <div class="row justify-content-end align-items-end">
+                                <div class="form-group col-sm-6 text-right"> 
                                     <button type="submit" class="btn-block btn-primary">회원가입</button>
                                 </div>
                             </div>
-                            
                         </form>
                     </div>
                 </div>
+                <!-- 페이지 하단 푸터 -->
                 <div class="mt-auto">
                     <p class="footer text-muted mb-0 mt-md-0 mt-4">By register you agree with our
-                        <span class="p-color me-1">terms and conditions</span>and
+                        <span class="p-color me-1">terms and conditions</span> and
                         <span class="p-color ms-1">privacy policy</span>
                     </p>
                 </div>

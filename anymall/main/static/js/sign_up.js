@@ -6,7 +6,7 @@ function validate(val) {
     v5 = document.getElementById("phone");
     v6 = document.getElementById("post_code");
     v7 = document.getElementById("adress");
-    v8 = document.getElementById("birth");
+
 
     flag1 = true;
     flag2 = true;
@@ -15,7 +15,7 @@ function validate(val) {
     flag5 = true;
     flag6 = true;
     flag7 = true;
-    flag8 = true;
+
 
     if(val>=1 || val==0) {
         if(v1.value == "") {
@@ -88,18 +88,8 @@ function validate(val) {
             flag6 = true;
         }
     }
-    if(val>=8 || val==0) {
-        if(v8.value == "") {
-            v8.style.borderColor = "red";
-            flag6 = false;
-        }
-        else {
-            v8.style.borderColor = "green";
-            flag6 = true;
-        }
-    }
 
-    flag = flag1 && flag2 && flag3 && flag4 && flag5 && flag6 && flag7 && flag8;
+    flag = flag1 && flag2 && flag3 && flag4 && flag5 && flag6 && flag7;
 
     return flag;
 }
@@ -117,3 +107,5 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+

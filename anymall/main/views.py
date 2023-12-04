@@ -8,6 +8,7 @@ def home(request):
     return render(request, "index.html")
 
 from django.contrib.auth import authenticate, login
+from django.contrib import messages
 from django.urls import reverse
 
 
@@ -18,30 +19,62 @@ def login_email(request):
         user = authenticate(request, username=email, password=password)
 
         if user is not None:
-            login(request, user)
-            messages.success(request, '로그인을 성공하였습니다')  # 로그인 성공 메시지
-            return redirect('/')
+            if user.email_verified:
+                login(request, user)
+                messages.success(request, '로그인을 성공하였습니다.')
+                return redirect('/')
+            else:
+                messages.error(request, '이메일 인증이 필요합니다. 이메일을 확인해 주세요.')
+                return render(request, 'login_email.html')  # 로그인 페이지를 다시 보여줍니다.
         else:
-            messages.error(request, '이메일 또는 비밀번호가 잘못되었습니다')  # 로그인 실패 메시지
+            messages.error(request, '이메일 또는 비밀번호가 잘못되었습니다.')
+            return render(request, 'login_email.html')  # 로그인 페이지를 다시 보여줍니다.
 
-    return render(request, 'login_email.html')
+    return render(request, 'login_email.html')  # 로그인 페이지를 처음 접속했을 때 보여줍니다.
 
 def sign_in(request):
     return render(request, "sign_in.html")
 
+import re
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-import re
+from django.core.signing import TimestampSigner
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 def validate_password(password):
-    """ 간단한 비밀번호 유효성 검사 함수 """
+    """비밀번호 유효성 검사 함수"""
     if len(password) < 8:
         raise ValidationError("비밀번호는 8자 이상이어야 합니다.")
     if not re.search("[a-zA-Z]", password):
         raise ValidationError("비밀번호에는 최소 하나의 문자가 포함되어야 합니다.")
     if not re.search("[0-9]", password):
         raise ValidationError("비밀번호에는 최소 하나의 숫자가 포함되어야 합니다.")
+
+
+# views.py
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.core.signing import TimestampSigner, BadSignature, SignatureExpired
+from django.http import HttpResponse
+from .models import CustomUser
+
+def verify_email(request, token):
+    signer = TimestampSigner()
+    try:
+        email = signer.unsign(token, max_age=86400)  # 24시간 유효
+        user = CustomUser.objects.get(email=email)
+        user.email_verified = True  # 인증 상태를 True로 변경
+        user.save()
+        return HttpResponse("이메일 인증이 완료되었습니다!")
+    except (BadSignature, SignatureExpired, CustomUser.DoesNotExist):
+        return HttpResponse("인증 링크가 유효하지 않거나 만료되었습니다.")
+
+
+from django.db import IntegrityError
 
 def sign_up(request):
     if request.method == 'POST':
@@ -50,7 +83,6 @@ def sign_up(request):
         password = request.POST.get('pwd')
         password_confirm = request.POST.get('pwd_check')
         user_phone = request.POST.get('phone')
-        birth = request.POST.get('birth')  # 추가적인 유효성 검사가 필요할 수 있습니다.
         zip_code = request.POST.get('post_code')
         user_address = request.POST.get('adress')
 
@@ -65,29 +97,38 @@ def sign_up(request):
             messages.error(request, str(e))
             return redirect('sign_up')
 
-        # 이메일 중복 검사
-        if CustomUser.objects.filter(email=email).exists():
-            messages.error(request, '이미 존재하는 이메일입니다.')
-            return redirect('sign_up')
-
         # 사용자 생성
-        user = CustomUser.objects.create_user(
-            email=email, 
-            username=username, 
-            password=password, 
-            user_phone=user_phone, 
-            zip_code=zip_code, 
-            user_address=user_address
-        )
-        # 생년월일, 우편번호, 주소 추가
-        user.birth = birth
-        user.zip_code = zip_code
-        user.user_address = user_address
-        user.save()
+        try:
+            user = CustomUser.objects.create_user(
+                email=email, 
+                username=username, 
+                password=password, 
+                user_phone=user_phone, 
+                zip_code=zip_code, 
+                user_address=user_address,
+            )
+            
+            # 이메일 인증 토큰 생성 및 발송
+            signer = TimestampSigner()
+            token = signer.sign(user.email)
+            verification_url = f"{settings.SITE_URL}/verify/{token}/"
+            send_mail(
+                'Verify your account',
+                f'Please click on the link to verify your account: {verification_url}',
+                settings.EMAIL_HOST_USER,
+                [user.email],
+                fail_silently=False,
+            )
 
-        messages.success(request, '회원가입이 성공적으로 완료되었습니다.')
-        return redirect('login_email')
-    return render(request, 'sign_up.html')
+            messages.success(request, '회원가입이 성공적으로 완료되었습니다. 인증 이메일을 확인해 주세요.')
+            return redirect('login_email')
+
+        except IntegrityError:
+            messages.error(request, '이미 존재하는 전화번호입니다. 다른 전화번호를 사용해 주세요.')
+            return render(request, 'sign_up.html')
+
+    else:
+        return render(request, 'sign_up.html')
 
 def shop(request):
 

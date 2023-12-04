@@ -20,3 +20,12 @@ class ProductForm(forms.ModelForm):
         if field_name in ['option_name', 'option_value', 'option_amount']:
             return f'options-{field_name}'
         return super().add_prefix(field_name)
+    
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from .models import CustomUser
+
+class CustomUserCreationForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = CustomUser
+        fields = UserCreationForm.Meta.fields + ('email', 'user_phone', 'zip_code', 'user_address')

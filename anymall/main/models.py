@@ -46,6 +46,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     user_address = models.CharField(max_length=200, null=True, blank=True)
     user_point = models.IntegerField(default=0)
     email_check = models.CharField(max_length=5, null=True, blank=True)
+    email_verified =models.BooleanField(default=False)
+    verification_code =models.CharField(max_length=6, null=True, blank=True)
     user_type = models.IntegerField(default=0, blank=True)
     sub_date = models.DateTimeField(auto_now_add=True)
     grade = models.CharField(default="Bronze", max_length=20, null=False)
