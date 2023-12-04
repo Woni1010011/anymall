@@ -5,10 +5,11 @@
 * Template URI: https://untree.co/
 * License: https://creativecommons.org/licenses/by/3.0/
 */ -->
+{% load static %}
 <!doctype html>
 <html lang="en">
 <head>
-	<link href="static/css/product.css" rel="stylesheet">
+	<link href="{% static 'css/product.css' %}" rel="stylesheet">
 	<title>Anymall</title>
 </head>
 
@@ -21,7 +22,7 @@
 		<div class="container">
 			<div class="product-summary">
 				<div class="product-image" alt="Image" class="img-fluid">
-					<img src="{{product.product_thumnail}}">
+					<img src="{{ product.product_thumnail.url }}">
 				</div>
 
 				<div class="product-caption">
@@ -70,9 +71,9 @@
 
 	{% include 'footer.html' %}
 
-	<script src="js/bootstrap.bundle.min.js"></script>
-	<script src="js/tiny-slider.js"></script>
-	<script src="js/custom.js"></script>
+	<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+	<script src="{% static 'js/tiny-slider.js' %}"></script>
+	<script src="{% static 'js/custom.js' %}"></script>
 </body>
 
 </html>
