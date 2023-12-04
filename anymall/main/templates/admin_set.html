@@ -144,14 +144,29 @@
                 <div class="standard">
                     <strong>옵션</strong>
                     <p>필수</p>
+                    <label for="is_option">옵션 선택</label><input type="checkbox" name="is_option">
                 </div>
-                <div class="option">
+                <div id="option_fields_container">
+                    <div class="option_fields" style="display: none;">
+                        <label for="option_name">Option Name:</label>
+                        <input type="text" name="options-option_name[]" id="option_name" placeholder="옵션 이름 (예: 색상)"><br>
+                
+                        <label for="option_value">Option Value:</label>
+                        <input type="text" name="options-option_value[]" id="option_value" placeholder="옵션 값 (예: 빨강, 파랑)"><br>
+                
+                        <label for="option_amount">Option Amount:</label>
+                        <input type="number" name="options-option_amount[]" id="option_amount" placeholder="추가 금액"><br>
+                    </div>
+                </div>
+                
+                <button type="button" id="add_option">Add Option</button>
+                {% comment %} <div class="option">
                     <input type="text" id="option_name" placeholder="옵션 이름 (예: 색상)">
                     <input type="text" id="option_value" placeholder="옵션 값 (예: 빨강, 파랑)">
                     <input type="number" id="option_amount" placeholder="추가 금액">
                     <button type="button" onclick="addOption()">+</button>
                 </div>
-                <div id="options_list"></div>
+                <div id="options_list"></div> {% endcomment %}
             </div>
             <div class="goods_info">
                 <div class="standard">
@@ -273,7 +288,7 @@ document.getElementById('detailInput').addEventListener('change', function(event
     labelElement.textContent = inputLength + '/100';
 });
 
-    // 옵션 추가
+    {% comment %} // 옵션 추가
     function addOption() {
     var name = document.getElementById('option_name').value;
     var value = document.getElementById('option_value').value;
@@ -308,9 +323,24 @@ document.getElementById('detailInput').addEventListener('change', function(event
 
 function removeOption(button) {
     button.parentElement.remove();
-}
+} {% endcomment %}
 
 
 
+</script>
+<script>
+    const optionFieldsContainer = document.getElementById('option_fields_container');
+    const addOptionButton = document.getElementById('add_option');
+    const optionFieldsTemplate = document.querySelector('.option_fields');
+
+    addOptionButton.addEventListener('click', () => {
+        const newOptionFields = optionFieldsTemplate.cloneNode(true);
+        newOptionFields.style.display = 'block';
+
+        // Clear input values in the cloned fields
+        newOptionFields.querySelectorAll('input').forEach(input => input.value = '');
+
+        optionFieldsContainer.appendChild(newOptionFields);
+    });
 </script>
 </html>

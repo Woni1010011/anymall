@@ -179,15 +179,28 @@ def admin_set(request):
         if form.is_valid():
             product = form.save(commit=False)
             product.save()
+
+            if form.cleaned_data['is_option']:
+                # Get the list of options from the submitted form
+                option_names = request.POST.getlist('options-option_name[]')
+                option_values = request.POST.getlist('options-option_value[]')
+                option_amounts = request.POST.getlist('options-option_amount[]')
+
+                # Create OptionList records for each option
+                for name, value, amount in zip(option_names, option_values, option_amounts):
+                    print(option_names, option_values, option_amounts)
+                    OptionList.objects.create(
+                        product_no=product,
+                        option_name=name,
+                        option_value=value,
+                        option_amount=amount if amount else 0,
+                    )
+
             return redirect("shop")
         else:
             print("폼 유효성 검사 실패:", form.errors)
     else:
         form = ProductForm()
 
-    context = {
-        'category': category,
-        'form': form,
-    }
-
+    context = {'category': category, 'form': form}
     return render(request, "admin_set.html", context)
