@@ -27,23 +27,21 @@
 
 				<div class="product-caption">
 					<div class="product-name">{{product.product_name}}</div>
+					<div class="product_description">{{product.product_description}}</div>
 					<div class="product-price">{{product.product_price}}</div>
-					<div class="product-option">
-						<select name="option-selectbox" id="" class="option-selectbox">
-							<option class="option_name" value="none">색상</option>
-							<option class="option_value" value="네이비">네이비</option>
-							<option class="option_value" value="화이트">화이트</option>
-							<option class="option_value" value="옐로우">옐로우</option>
-						</select>
-						<select name="option-selectbox" id="" class="option-selectbox">
-							<option class="option_name" value="none">사이즈</option>
-							<option class="option_value" value="XS">XS</option>
-							<option class="option_value" value="S">S</option>
-							<option class="option_value" value="M">M</option>
-							<option class="option_value" value="L">L</option>
-							<option class="option_value" value="XL">XL</option>
-						</select>
-					</div>
+					<br>
+					{% if product.is_option %}
+						{% for option_name, option_values in options %}
+							<div class="product-option">
+								<select name="option-selectbox" id="" class="option-selectbox">
+									<option class="option_value" value="none">{{ option_name }}</option>
+									{% for value in option_values %}
+										<option class="option_value" value="{{ value }}">{{ value }}</option>
+									{% endfor %}
+								</select>
+							</div>
+						{% endfor %}
+					{% endif %}
 					<div class="purchase-btn">
 						<p><a href="" class="btn btn-white-outline">장바구니</a> <a href="#" class="btn btn-secondary me-2">바로구매</a></p>
 					</div>

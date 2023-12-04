@@ -102,8 +102,24 @@ def shop(request):
 def product(request, product_no):
     product = get_object_or_404(Product, product_no=product_no)
 
+    # Fetch options if is_option is True
+    options = []
+    if product.is_option:
+        options_dict = {}
+        for option in product.options.all():
+            option_name = option.option_name
+            option_value = option.option_value
+
+            if option_name not in options_dict:
+                options_dict[option_name] = []
+
+            options_dict[option_name].append(option_value)
+
+        options = options_dict.items()
+
     context = {
-        'product':product
+        'product': product,
+        'options': options,
     }
     return render(request, "product.html", context)
 
@@ -194,7 +210,6 @@ def admin_set(request):
 
                 # Create OptionList records for each option
                 for name, value, amount in zip(option_names, option_values, option_amounts):
-                    print(option_names, option_values, option_amounts)
                     OptionList.objects.create(
                         product_no=product,
                         option_name=name,
