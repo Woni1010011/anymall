@@ -27,6 +27,13 @@
                         <div class="d-flex align-items-center">
                             <form method="post" action="{% url 'login_email' %}"> <!-- 폼 액션 및 메서드 설정 -->
                                 {% csrf_token %} <!-- CSRF 토큰 추가 -->
+                                {% if messages %}
+                                    <div id="messageBox" class="messages">
+                                        {% for message in messages %}
+                                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
                                 <div class="form-group">
                                     <label class="text-muted" for="exampleInputEmail1">Email address</label>
                                     <input type="email" class="form-control" id="exampleInputEmail1" name="email" placeholder="Enter email"> 

@@ -107,6 +107,11 @@
     color: #ff0000;
 }
 
+.alert.error {
+    color: red;
+    border-color: red;
+}
+
 @media (max-width:767px) {
     body {
         padding: 10px;

@@ -29,3 +29,12 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    // 이벤트 핸들러 및 기타 코드...
+
+    // 메시지 박스가 존재하면 모달을 표시합니다.
+    if (document.getElementById('messageBox')) {
+        $('#messageModal').modal('show');
+    }
+});

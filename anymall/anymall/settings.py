@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
-    "django.contrib.messages",
+    "django.contrib.messages",  
     "django.contrib.staticfiles",
     "main",
     "anymall_admin",
@@ -65,6 +65,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    'django.contrib.sessions.middleware.SessionMiddleware',
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
@@ -168,6 +169,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 MEDIA_URL = f"http://{AWS_S3_CUSTOM_DOMAIN}/media/"
 
 
+
 # # Media 파일을 저장할 S3 경로 및 설정
 # class MediaStorage(S3Boto3Storage):
 #     # AWS S3 버킷 내의 저장 위치
@@ -175,6 +177,16 @@ MEDIA_URL = f"http://{AWS_S3_CUSTOM_DOMAIN}/media/"
 #     # 기존 파일 덮어쓰기 방지
 #     file_overwrite = False
 
+# 이메일 설정 예시 (Gmail 사용 시)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = get_secret("HOST_GMAIL")
+EMAIL_HOST_PASSWORD = get_secret("HOST_GMAIL_PASSWORD")
+
+# 사이트 URL 설정
+SITE_URL = 'http://127.0.0.1:8000'  # 실제 사이트 URL로 변경
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

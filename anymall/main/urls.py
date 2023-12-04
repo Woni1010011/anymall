@@ -14,6 +14,7 @@ urlpatterns = [
     path("login_email", views.login_email, name="login_email"),
     path("sign_in", views.sign_in, name="sign_in"),
     path("sign_up", views.sign_up, name="sign_up"),
+    path('verify/<str:token>/', views.verify_email, name='verify_email'),
     path('social-auth/', include('social_django.urls', namespace='social')),
 
 
