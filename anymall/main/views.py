@@ -193,7 +193,7 @@ def admin_set(request):
                         product_no=product,
                         option_name=name,
                         option_value=value,
-                        option_amount=amount if amount else 0,
+                        option_amount=amount,
                     )
 
             return redirect("shop")
