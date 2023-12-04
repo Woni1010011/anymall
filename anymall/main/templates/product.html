@@ -58,7 +58,9 @@
 	<div class="why-choose-section">
 		<div class="container">
 			<div class="row my-5">
-
+				{% for image in product.product_images.all %}
+				<img src="{{ image.image.url }}" alt="{{ product.product_name }} detail image">
+				{% endfor %}
 			</div>
 		</div>
 	</div>

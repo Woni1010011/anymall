@@ -179,6 +179,12 @@ def admin_set(request):
         if form.is_valid():
             product = form.save(commit=False)
             product.save()
+            
+            for image in request.FILES.getlist('product_images'):
+                product_image = ProductImage.objects.create()
+                product_image.image = image
+                product_image.save()
+                product.product_images.add(product_image)
 
             if form.cleaned_data['is_option']:
                 # Get the list of options from the submitted form
