@@ -124,6 +124,7 @@ class Product(models.Model):
     is_display = models.BooleanField(default=True)
     is_for_sale = models.BooleanField(default=True)
     sales_volume = models.IntegerField(default=0)
+    total_stock = models.IntegerField(default=0)
 
     pass
 
@@ -152,6 +153,7 @@ class OptionList(models.Model):
     option_name = models.CharField(max_length=20, null=False)
     option_value = models.CharField(max_length=20, null=False)
     option_amount = models.IntegerField(default=0, null=False)
+    option_stock = models.IntegerField(default=0)
 
     def __str__(self):
         return self.option_name
