@@ -131,35 +131,33 @@
             </div>
             <div class="goods_info">
                 <div class="standard">
-                    <strong>재고수량</strong>
-                    <p>선택</p>
-                </div>
-                <div class="stock">
-                    <input type="text" id="stock_input" placeholder="숫자만 입력">
-                    <label for="stock_input">원</label>
-                    <p>옵션 재고수량을 사용하면, 옵션의 재고수량으로 적용되어 자동으로 입력됩니다.</p>
-                </div>
-            </div>
-            <div class="goods_info">
-                <div class="standard">
                     <strong>옵션</strong>
                     <p>필수</p>
                     <label for="is_option">옵션 선택</label><input type="checkbox" name="is_option">
                 </div>
                 <div id="option_fields_container">
                     <div class="option_fields">
-                        <label for="option_name">Option Name:</label>
+                        <label for="option_name">옵션 이름 :</label>
                         <input type="text" name="options-option_name[]" id="option_name" placeholder="옵션 이름 (예: 색상)"><br>
                 
-                        <label for="option_value">Option Value:</label>
+                        <label for="option_value">옵션 값 :</label>
                         <input type="text" name="options-option_value[]" id="option_value" placeholder="옵션 값 (예: 빨강, 파랑)"><br>
+                        
+                        <label for="option_name">옵션 이름 추가 :</label>
+                        <input type="text" name="options-option_name_add[]" id="option_name" placeholder="옵션 이름 (예: 색상)"><br>
                 
-                        <label for="option_amount">Option Amount:</label>
+                        <label for="option_value">옵션 값 추가 :</label>
+                        <input type="text" name="options-option_value_add[]" id="option_value" placeholder="옵션 값 (예: 빨강, 파랑)"><br>
+                
+                        <label for="option_amount">옵션 추가금액 :</label>
                         <input type="number" name="options-option_amount[]" id="option_amount" placeholder="추가 금액"><br>
+                        
+                        <label for="option_stock">재고 :</label>
+                        <input type="number" name="options-option_stock[]" id="option_stock" placeholder="수량"><br>
                     </div>
                 </div>
                 
-                <button type="button" id="add_option">Add Option</button>
+                <button type="button" id="add_option">옵션 추가하기</button>
                 {% comment %} <div class="option">
                     <input type="text" id="option_name" placeholder="옵션 이름 (예: 색상)">
                     <input type="text" id="option_value" placeholder="옵션 값 (예: 빨강, 파랑)">
@@ -167,6 +165,18 @@
                     <button type="button" onclick="addOption()">+</button>
                 </div>
                 <div id="options_list"></div> {% endcomment %}
+            </div>
+            <div class="goods_info">
+                <div class="standard">
+                    <strong>재고수량</strong>
+                    <p>선택</p>
+                </div>
+                <div class="stock">
+                    <input type="text" id="stock_input" placeholder="숫자만 입력" name="total_stock">
+                    <label for="stock_input">개</label>
+                    <p>버튼을 누르면, 옵션의 재고수량의 총 합이 적용되어 입력됩니다.</p>
+                    <button type="button" id="calculate_stock_button">재고수량 계산</button>
+                </div>
             </div>
             <div class="goods_info">
                 <div class="standard">
@@ -342,6 +352,34 @@ function removeOption(button) {
         newOptionFields.querySelectorAll('input').forEach(input => input.value = '');
 
         optionFieldsContainer.appendChild(newOptionFields);
+
+        // Update stock input when a new option is added
+        updateStockInput();
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const stockInput = document.getElementById('stock_input');
+        const calculateStockButton = document.getElementById('calculate_stock_button');
+
+        calculateStockButton.addEventListener('click', updateStockInput);
+
+        function updateStockInput() {
+            const optionStockInputs = document.querySelectorAll('input[name^="options-option_stock[]"]');
+            let totalOptionStock = 0;
+
+            // Loop through all option_stock inputs to calculate total
+            optionStockInputs.forEach(input => {
+                if (input.value !== "") {
+                    totalOptionStock += parseInt(input.value);
+                }
+            });
+
+            // Set the total in the stock input
+            stockInput.value = totalOptionStock;
+        }
+        
+        // Trigger the initial stock update
+        updateStockInput();
     });
 </script>
 </html>

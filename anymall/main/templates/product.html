@@ -31,13 +31,18 @@
 					<div class="product-price">{{product.product_price}}</div>
 					<br>
 					{% if product.is_option %}
-						{% for option_name, option_values in options %}
+						{% for option in options %}
 							<div class="product-option">
 								<select name="option-selectbox" id="" class="option-selectbox">
-									<option class="option_value" value="none">{{ option_name }}</option>
-									{% for value in option_values %}
-										<option class="option_value" value="{{ value }}">{{ value }}</option>
-									{% endfor %}
+									<option class="option_value" value="none">{{ option.option_name }}</option>
+									<option class="option_value" value="{{ option.option_value }}">{{ option.option_value }}</option>
+								</select>
+									{% if option.option_name_add %}
+								<select name="option-selectbox" id="" class="option-selectbox">
+									<option class="option_value" value="none">{{ option.option_name_add }}</option>
+									<option class="option_value" value="{{ option.option_value_add }}">{{ option.option_value_add }} (+{{ option.option_amount }}원)</option>
+									
+									{% endif %}
 								</select>
 							</div>
 						{% endfor %}
@@ -75,5 +80,21 @@
 	<script src="{% static 'js/tiny-slider.js' %}"></script>
 	<script src="{% static 'js/custom.js' %}"></script>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectboxes = document.querySelectorAll('.option-selectbox');
+
+        selectboxes.forEach(selectbox => {
+            selectbox.addEventListener('change', function () {
+                const selectedOption = this.options[this.selectedIndex];
+                const amountSelector = this.getAttribute('data-amount-selector');
+                const amountSpan = document.querySelector(amountSelector);
+
+                // Update the amount span with the selected option's amount
+                amountSpan.textContent = selectedOption.dataset.amount || 0;
+            });
+        });
+    });
+</script>
 
 </html>

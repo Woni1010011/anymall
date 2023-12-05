@@ -143,20 +143,9 @@ def shop(request):
 def product(request, product_no):
     product = get_object_or_404(Product, product_no=product_no)
 
-    # Fetch options if is_option is True
     options = []
     if product.is_option:
-        options_dict = {}
-        for option in product.options.all():
-            option_name = option.option_name
-            option_value = option.option_value
-
-            if option_name not in options_dict:
-                options_dict[option_name] = []
-
-            options_dict[option_name].append(option_value)
-
-        options = options_dict.items()
+        options = OptionList.objects.filter(product_no=product)
 
     context = {
         'product': product,
@@ -247,15 +236,21 @@ def admin_set(request):
                 # Get the list of options from the submitted form
                 option_names = request.POST.getlist('options-option_name[]')
                 option_values = request.POST.getlist('options-option_value[]')
+                option_names_add = request.POST.getlist('options-option_name_add[]')
+                option_values_add = request.POST.getlist('options-option_value_add[]')
                 option_amounts = request.POST.getlist('options-option_amount[]')
+                option_stocks = request.POST.getlist('options-option_stock[]')
 
                 # Create OptionList records for each option
-                for name, value, amount in zip(option_names, option_values, option_amounts):
+                for name, value, name_add, value_add, amount, stock in zip(option_names, option_values, option_names_add, option_values_add, option_amounts, option_stocks):
                     OptionList.objects.create(
                         product_no=product,
                         option_name=name,
                         option_value=value,
+                        option_name_add=name_add,
+                        option_value_add=value_add,
                         option_amount=amount,
+                        option_stock=stock,
                     )
 
             return redirect("shop")
