@@ -129,13 +129,6 @@ class Product(models.Model):
     pass
 
 
-class Stock(models.Model):
-    product_no = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="stocks"
-    )
-    category_id = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="categories"
-    )
 
 
 class ProductImage(models.Model):
@@ -152,6 +145,8 @@ class OptionList(models.Model):
     )
     option_name = models.CharField(max_length=20, null=False)
     option_value = models.CharField(max_length=20, null=False)
+    option_name_add = models.CharField(max_length=20, null=True, blank=True)
+    option_value_add = models.CharField(max_length=20, null=True, blank=True)   
     option_amount = models.IntegerField(default=0, null=False)
     option_stock = models.IntegerField(default=0)
 
