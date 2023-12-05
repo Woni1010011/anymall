@@ -85,6 +85,8 @@ def sign_up(request):
         user_phone = request.POST.get('phone')
         zip_code = request.POST.get('post_code')
         user_address = request.POST.get('adress')
+        birth_date = request.POST.get('birth')
+        gender = request.POST.get('male_or_female')
 
         # 비밀번호 유효성 검사
         if password != password_confirm:
@@ -148,42 +150,70 @@ def product(request, product_no):
     }
     return render(request, "product.html", context)
 
-# def mypage(request):
-#     # if request.session.get("user_email"):
-#     #     user_email = request.session["user_email"]
-
-#     #     try:
-#     #         user = User.objects.get(user_email=user_email)
-#     #         return render(request, "mypage.html", user)
-#     #     except User.DoesNotExist:
-#     #         return redirect("home")
-
-#     user = get_object_or_404(CustomUser, user_no=8)  # User 대신 CustomUser를 사용합니다.
+from django.contrib.auth.decorators import login_required
+from django.utils.formats import date_format
 
 
-#     context = {
-#         "user_name" : user.user_name
-#     }
 
-#     return render(request, "mypage.html", context)
+@login_required
 def mypage(request):
-    # if request.session.get("user_email"):
-    #     user_email = request.session["user_email"]
-
-    #     try:
-    #         user = User.objects.get(user_email=user_email)
-    #         return render(request, "mypage.html", user)
-    #     except User.DoesNotExist:
-    #         return redirect("home")
-
-    user = get_object_or_404(User, user_no=8)
-
-
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('mypage')  # 프로필이 업데이트된 후 같은 페이지로 리디렉트
+    else:
+        form = CustomUserChangeForm(instance=request.user)
+    
+    user = request.user
     context = {
-        "user_name" : user.user_name
+        'form': form,  # 프로필 업데이트 폼 추가
+        'user_name': user.username,
+        'user_grade': user.grade,
+        'sub_date': date_format(user.sub_date, "SHORT_DATE_FORMAT"),
+        'user_email': user.email,
+        'user_phone': user.user_phone,
+        'user_point': user.user_point,
+        'user_bank_account':user.refund_bank_name,
+        'user_bank_account_num': user.refund_account_number,
+        'user_birth': user.birth_date,
+        'user_gender': user.gender,
     }
+    
+    return render(request, 'mypage.html', context)
 
-    return render(request, "mypage.html", context)
+@login_required
+def pwd_verify(request):
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        user = authenticate(username=request.user.username, password=password)
+        if user is not None:
+            request.session['pwd_verified'] = True  # 세션에 표시
+            return redirect('edit_info')
+        else:
+            messages.error(request, '비밀번호가 틀렸습니다. 다시 입력해주세요.')  # 메시지 추가
+    return render(request, 'pwd_verify.html')
+
+@login_required
+def edit_info(request):
+    if not request.session.get('pwd_verified', False):
+        # 비밀번호 검증을 통과하지 못했으면 pwd_verify로 리디렉트
+        return redirect('pwd_verify')
+
+    # 비밀번호 검증을 통과했으면 나머지 로직 수행
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            del request.session['pwd_verified']  # 세션에서 플래그 제거
+            return redirect('mypage')
+        else:
+            # 폼이 유효하지 않을 경우의 처리
+            pass
+    else:
+        form = CustomUserChangeForm(instance=request.user)
+
+    return render(request, 'edit_info.html', {'form': form})
 
 def admin_category(request):
     if request.method == "POST":

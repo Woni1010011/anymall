@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- edit_info.html -->
+    <form action="{% url 'edit_info' %}" method="POST">
+        {% csrf_token %}
+        <label for="email">이메일:</label>
+        <input type="email" id="email" name="email" value="{{ user_email }}">
+
+        <label for="name">이름:</label>
+        <input type="text" id="name" name="name" value="{{ user_name }}">
+
+        <label for="phone">휴대전화:</label>
+        <input type="tel" id="phone" name="phone" value="{{ user_phone }}">
+
+        <input type="submit" value="정보 수정">
+    </form>
+
+</body>
+</html>
