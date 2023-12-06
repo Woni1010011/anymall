@@ -35,7 +35,7 @@
                 <img src="" alt="name">
                 <div class="user">
                     <div class="user_nick">
-                        <strong>NickName</strong>
+                        <strong>{{user_name}}</strong>
                         <a href="#change_user_info">회원정보변경</a>
                     </div>
                     <div class="user_grade">
@@ -80,8 +80,7 @@
         <main class="content">
             <div class="user_info">
                 <div class="standard">
-                    <strong>기본 회원정보</strong>
-                    <p>필수</p>
+                    <strong>필수 회원정보</strong>
                 </div>
                 <div class="st_pic">
                     <p>사진</p>
@@ -90,63 +89,53 @@
                         <p>회원님을 알릴 수 있는 사진을 등록해 주세요.</p>
                         <p>등록된 사진은 회원님의 게시물이나 댓글들에 사용됩니다.</p>
                     </div>
-                    <button>사진 변경</button>
+                    <div>
+                        <a href="{% url 'pwd_verify' %}">
+                            <button class="edit_button">필수정보 수정</button>
+                        </a>
+                    </div>
                 </div>
                 <div class="st_pic_info">
                     <p>이메일</p>
                     <strong>{{user_email}}</strong>
                 </div>
                 <div class="st_pic_info">
-                    <p>비밀번호</p>
-                    <strong>{{user_password}}</strong>
-                    <button>비밀번호 변경</button>
-                </div>
-                <div class="st_pic_info">
-                    <p>이름(실명)</p>
+                    <p>이름</p>
                     <strong>{{user_name}}</strong>
-                    <button>이름수정</button>
-                </div>
-                <div class="st_pic_info">
-                    <p>닉네임</p>
-                    <strong>AnyMall</strong>
-                    <button>닉네임 변경</button>
                 </div>
                 <div class="st_pic_info">
                     <p>이메일</p>
                     <strong>{{user_email}}</strong>
-                    <button>이메일 변경</button>
                 </div>
                 <div class="st_pic_info">
                     <p>휴대전화</p>
                     <strong>{{user_phone}}</strong>
-                    <button>휴대전화 변경</button>
+                </div>
+                <div class="st_pic_info">
+                    <p>생년월일</p>
+                    <strong>{{user_birth}}</strong>
+                </div>
+                <div class="st_pic_info">
+                    <p>성별</p>
+                    <strong>{{user_gender}}</strong>
+                </div>
+                <div class="ps">
+                    <li>생년월일,성별은 수정이 불가능합니다.</li>
                 </div>
             </div>
             <div class="plus_user_info">
                 <div class="standard">
                     <strong>추가 회원정보</strong>
-                    <p>선택</p>
-                </div>
-                <div class="st_pic_info">
-                    <p>생년월일</p>
-                    <strong>2023.**.**</strong>
-                </div>
-                <div class="st_pic_info">
-                    <p>성별</p>
-                    <strong>남자</strong>
                 </div>
                 <div class="st_pic_info">
                     <p>환불계좌</p>
-                    <strong>*******발|**** ***********</strong>
+                    <strong>[{{user_bank_account}}]  {{user_bank_account_num}}</strong>
                     <button>환불계좌 관리</button>
                 </div>
                 <div class="st_pic_info">
                     <p>배송지</p>
-                    <strong>오르미</strong>
+                    <strong>[{{zipcode}}]  {{user_address}}</strong>
                     <button>배송지 관리</button>
-                </div>
-                <div class="ps">
-                    <li>생년월일,성별은 수정이 불가능합니다.</li>
                 </div>
             </div>
             <div class="alarm">

@@ -32,11 +32,21 @@
 					<li class="nav-item"><a class="nav-link" href="#">Event</a></li>
 					<li class="nav-item"><a class="nav-link" href="#">Q＆A</a></li>
 				</ul>
-
-				<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-					<li><a class="nav-link" href="{% url "mypage" %}"><img src="{% static 'images/user.svg' %}"></a></li>
-					<li><a class="nav-link" href="#"><img src="{% static 'images/cart.svg' %}"></a></li>
-				</ul>
+        
+        <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
+          {% if user.is_authenticated %}
+            <li><a class="nav-link" href="{% url "logout" %}">Log out</a></li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{% url "sign_in" %}">Sign_in</a></li>
+          {% endif %}
+          {% if user.is_authenticated %}
+            <li><a class="nav-link" href="{% url "mypage" %}"><img src="static/images/user.svg"></a></li>
+          {% else %}
+            <li><a class="nav-link" href="{% url "sign_in" %}"><img src="static/images/user.svg"></a></li>
+          {% endif %}          
+          <li><a class="nav-link" href="#"><img src="static/images/cart.svg"></a></li>
+        </ul>
+        
 			</div>
 		</div>
 			

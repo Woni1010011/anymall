@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // login_email 페이지로 이동하는 함수
 function redirectToSignUp() {
-    window.location.href = "/login_email"; // 원하는 URL로 변경하세요.
+    window.location.href = "/sign_up"; // 원하는 URL로 변경하세요.
 }
 
 // X누르면 홈화면으로

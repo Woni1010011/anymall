@@ -71,6 +71,22 @@
                                     <input type="text" id="post_code" name="post_code" placeholder="" onblur="validate(6)"> 
                                 </div>
                             </div>
+                            <!-- 생년월일, 성별 -->
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-6 flex-column d-flex"> 
+                                    <label class="form-control-label px-3">생년월일<span class="text-danger"> *</span></label> 
+                                    <input type="date" id="birth" name="birth" placeholder=""  onblur="validate(8)"> 
+                                </div>
+                                <div class="form-group col-sm-6 flex-column d-flex">
+                                    <label class="form-control-label px-3">성별<span class="text-danger"> *</span></label>
+                                    <select id="male_or_female" name="male_or_female" onblur="validate(9)">
+                                        <option value="">선택...</option>
+                                        <option value="male">남자</option>
+                                        <option value="female">여자</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <!-- 주소 -->
                             <div class="row justify-content-between text-left">
                                 <div class="form-group col-12 flex-column d-flex"> 

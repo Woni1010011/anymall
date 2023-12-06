@@ -6,6 +6,8 @@ function validate(val) {
     v5 = document.getElementById("phone");
     v6 = document.getElementById("post_code");
     v7 = document.getElementById("adress");
+    v8 = document.getElementById("birth");
+    v9 = document.getElementById("male_or_female");
 
 
     flag1 = true;
@@ -15,6 +17,8 @@ function validate(val) {
     flag5 = true;
     flag6 = true;
     flag7 = true;
+    flag8 = true;
+    flag9 = true;
 
 
     if(val>=1 || val==0) {
@@ -88,8 +92,28 @@ function validate(val) {
             flag6 = true;
         }
     }
+    if(val>=8 || val==0) {
+        if(v8.value == "") {
+            v8.style.borderColor = "red";
+            flag8 = false;
+        }
+        else {
+            v8.style.borderColor = "green";
+            flag8 = true;
+        }
+    }
+    if(val>=9 || val==0) {
+        if(v9.value == "") {
+            v9.style.borderColor = "red";
+            flag9 = false;
+        }
+        else {
+            v9.style.borderColor = "green";
+            flag9 = true;
+        }
+    }
 
-    flag = flag1 && flag2 && flag3 && flag4 && flag5 && flag6 && flag7;
+    flag = flag1 && flag2 && flag3 && flag4 && flag5 && flag6 && flag7 && flag8 && flag9;
 
     return flag;
 }

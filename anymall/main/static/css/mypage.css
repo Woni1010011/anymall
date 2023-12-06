@@ -288,6 +288,14 @@ main {
     background-color: transparent;
 }
 
+.edit_button{
+    width: 100px;
+    height: 32px;
+    border: 1px solid #ccc;
+    font-weight: bold;
+    background-color: transparent;
+}
+
 .st_pic_img {
     display: flex;
     flex-direction: column;
