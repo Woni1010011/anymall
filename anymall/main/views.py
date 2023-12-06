@@ -1,3 +1,4 @@
+from collections import defaultdict
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from .models import *
@@ -141,15 +142,30 @@ def shop(request):
 
 
 def product(request, product_no):
-    product = get_object_or_404(Product, product_no=product_no)
+    product = Product.objects.get(pk=product_no)
+    options = product.options.all()
 
-    options = []
-    if product.is_option:
-        options = OptionList.objects.filter(product_no=product)
+    
+    options_all = OptionList.objects.filter(product_no=product)
+    grouped_options = defaultdict(list)
+
+    for option in options_all:
+        key = option.option_name_add
+        grouped_options[key].append(option)
+
+
+    option_groups = defaultdict(lambda: defaultdict(list))
+    for option in options:
+        option_groups[option.option_name][option.option_value].append({
+            'name_add': option.option_name_add,
+            'value_add': option.option_value_add,
+            'amount': option.option_amount
+        })
 
     context = {
         'product': product,
-        'options': options,
+        'option_groups': dict(option_groups),
+        'grouped_options': grouped_options
     }
     return render(request, "product.html", context)
 

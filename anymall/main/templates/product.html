@@ -31,22 +31,56 @@
 					<div class="product-price">{{product.product_price}}</div>
 					<br>
 					{% if product.is_option %}
-						{% for option in options %}
+						{% for option_name, options in option_groups.items %}
 							<div class="product-option">
-								<select name="option-selectbox" id="" class="option-selectbox">
-									<option class="option_value" value="none">{{ option.option_name }}</option>
-									<option class="option_value" value="{{ option.option_value }}">{{ option.option_value }}</option>
-								</select>
-									{% if option.option_name_add %}
-								<select name="option-selectbox" id="" class="option-selectbox">
-									<option class="option_value" value="none">{{ option.option_name_add }}</option>
-									<option class="option_value" value="{{ option.option_value_add }}">{{ option.option_value_add }} (+{{ option.option_amount }}원)</option>
-									
-									{% endif %}
+								<label for="select-{{ option_name }}">{{ option_name }}</label>
+								<select name="option-selectbox" id="select-{{ option_name }}" class="option-selectbox" onchange="updateAdditionalOptions('{{ option_name }}', this.value);">
+									<option value="none">-- {{ option_name }} 선택 --</option>
+									{% for option in options %}
+										<option class="option_value" value="{{ option }}">{{ option }}</option>
+										
+									{% endfor %}
+
 								</select>
 							</div>
+
+			
+						
+	
+								
 						{% endfor %}
 					{% endif %}
+							
+
+					{% if options %}
+    <div class="option-select">
+        <label for="option-selectbox">옵션 선택:</label>
+        <select id="option-selectbox" name="option-selectbox">
+            <option value="">옵션을 선택하세요</option>
+            {% for option in options %}
+                <option value="{{ option.option_value }}">
+                    {{ option.option_name_add }}: {{ option.option_value_add }} (추가비용: {{ option.option_amount }}원)
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+{% else %}
+    <p>이 제품에는 추가 옵션이 없습니다.</p>
+{% endif %}
+
+
+					
+					<div>
+						<h2>Debug Information</h2>
+						<pre>{{ options }}</pre>
+						<pre>{{ option_groups|safe }}</pre>
+					</div>
+					
+				
+				
+
+					
+
 					<div class="purchase-btn">
 						<p><a href="" class="btn btn-white-outline">장바구니</a> <a href="#" class="btn btn-secondary me-2">바로구매</a></p>
 					</div>
@@ -96,5 +130,33 @@
         });
     });
 </script>
+
+<script>
+    function updateAdditionalOptions(optionName, selectedValue) {
+        // 모든 부가 옵션 숨기기
+        document.querySelectorAll('.additional-options').forEach(function(div) {
+            div.style.display = 'none';
+        });
+
+        // 선택된 주 옵션에 해당하는 부가 옵션 필드를 표시
+        var additionalDiv = document.getElementById(`additional-${optionName}`);
+        if (additionalDiv) {
+            additionalDiv.style.display = 'block';
+
+            // 해당하는 부가 옵션 선택 필드 활성화
+            var selectBoxes = additionalDiv.querySelectorAll('select');
+            selectBoxes.forEach(function(selectBox) {
+                if (selectBox.id.endsWith(`-${selectedValue}`)) {
+                    selectBox.style.display = 'block';
+                } else {
+                    selectBox.style.display = 'none';
+                }
+            });
+        }
+    }
+
+	
+</script>
+
 
 </html>
