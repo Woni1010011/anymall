@@ -33,26 +33,29 @@
 					<br>
 					<!-- 주 옵션 -->
 					<select id="primary-option" onchange="updateSecondaryOptions()">
-						<option value="">-- 색상 선택 --</option>
-						{% for color in option_groups.색상 %}
-						<option value="{{ color }}">{{ color }}</option>
+						<option value="">-- 옵션 선택 --</option>
+						{% for option_name, values in optionGroups.items %}
+						{% for option_value, _ in values.items %}
+						<option value="{{ option_name }}|{{ option_value }}">{{ option_name }}: {{ option_value }}
+						</option>
+						{% endfor %}
 						{% endfor %}
 					</select>
-				
+
 					<!-- 부가 옵션 -->
 					<div id="secondary-options">
-					
+
 
 					</div>
 
+					<div></div>
 
 
+					<div class="purchase-btn">
+						<p><a href="" class="btn btn-white-outline">장바구니</a> <a href="#"
+								class="btn btn-secondary me-2">바로구매</a></p>
+					</div>
 
-						<div class="purchase-btn">
-							<p><a href="" class="btn btn-white-outline">장바구니</a> <a href="#"
-									class="btn btn-secondary me-2">바로구매</a></p>
-						</div>
-					
 				</div>
 
 			</div>
@@ -101,25 +104,27 @@
 
 <script>
 	function updateSecondaryOptions() {
-		const primaryOption = document.getElementById('primary-option').value;
+		const selectedValue = document.getElementById('primary-option').value;
+		const [optionName, optionValue] = selectedValue.split('|');
 		const secondaryOptionsContainer = document.getElementById('secondary-options');
 
 		// 기존 부가 옵션 내용을 지웁니다
 		secondaryOptionsContainer.innerHTML = '';
 
 		// 선택된 주 옵션에 대한 부가 옵션을 동적으로 생성합니다
-		if (primaryOption && optionGroups[primaryOption]) {
-			const sizes = optionGroups[primaryOption];
+		if (optionGroups[optionName] && optionGroups[optionName][optionValue]) {
+			const secondaryOptions = optionGroups[optionName][optionValue];
 			const select = document.createElement('select');
 
 			// 기본 옵션 추가
-			const defaultOption = new Option('-- 사이즈 선택 --', '');
+			const defaultOption = new Option('-- 추가 옵션 선택 --', '');
 			select.appendChild(defaultOption);
 
-			// 각 사이즈 옵션 추가
-			sizes.forEach(function (size) {
-				const option = new Option(`${size.value_add} (추가비용: ${size.amount}원)`, size.value_add);
-				select.appendChild(option);
+			// 각 부가 옵션 추가
+			secondaryOptions.forEach(function (option) {
+				const optionText = `${option.option_name_add}: ${option.option_value_add} (추가비용: ${option.amount}원)`;
+				const optionElement = new Option(optionText, option.option_value_add);
+				select.appendChild(optionElement);
 			});
 
 			secondaryOptionsContainer.appendChild(select);
@@ -128,10 +133,11 @@
 
 
 
+
 </script>
 
 <script type="text/javascript">
-	const optionGroups = {{ option_groups.색상| safe }};
+	const optionGroups = {{ optionGroups| safe }};
 </script>
 
 </html>

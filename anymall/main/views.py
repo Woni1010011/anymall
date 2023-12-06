@@ -147,21 +147,19 @@ def product(request, product_no):
 
     
      # 주 옵션 및 부가 옵션 그룹화
-    option_groups = defaultdict(lambda: defaultdict(list))
+    optionGroups = defaultdict(lambda: defaultdict(list))
     for option in options:
-        primary = option.option_name
-        
-        option_groups[primary][option.option_value].append({
-           
-            'value_add': option.option_value_add,
+        primary_key = (option.option_name, option.option_value)
+        optionGroups[primary_key[0]][primary_key[1]].append({
+            'option_name_add': option.option_name_add,
+            'option_value_add': option.option_value_add,
             'amount': option.option_amount
         })
 
-    option_groups = {k: dict(v) for k, v in option_groups.items()}
 
     context = {
         'product': product,
-        'option_groups': option_groups
+        'optionGroups': dict((k, dict(v)) for k, v in optionGroups.items())
     }
 
     return render(request, "product.html", context)
