@@ -59,18 +59,14 @@
                     <strong>카테고리</strong>
                     <p>필수</p>
                 </div>
+                <br>
                 <div class="category_box">
-                    <ul>
-                        {% for category_instance in category %}
-                          <li>{{ category_instance.category_id }} - {{ category_instance.category_name }}</li>
-                        {% endfor %}
-                    </ul>
-                    <button>카테고리명 검색</button>
-                    <button>카테고리명 선택</button>
-                    <div>
-                        <input type="text" class="text_input" placeholder="카테고리명 입력" name="category_id">
-                    </div>
-                    <p>상품과 맞지 않는 카테고리에 등록할 경우 강제 이동되거나 판매중지, 판매금지 될 수 있습니다.</p>
+                    {% for category_instance in category %}
+                        <label>
+                            <input type="radio" name="category_id" value="{{ category_instance.category_id }}">
+                            {{ category_instance.category_name }}
+                        </label>
+                    {% endfor %}
                 </div>
             </div>
             <div class="goods_info">
@@ -97,14 +93,6 @@
                     <label for="price_input">원</label>
                     <p>네이버 쇼핑을 통한 주문일 경우 네이버쇼핑 매출연동수수료 2%가 네이버페이 결제수수료와 별도로 과금됩니다.</p>
                     <p>판매가, 할인가를 활용한 비정상 거래는 자동 탐지되어 판매지수에 포함되지 않으니 유의해주세요.</p>
-                </div>
-                <div class="standard">
-                    <strong>세일가격</strong>
-                    <p>필수</p>
-                </div>
-                <div class="price">
-                    <input type="text" id="sales_volume" placeholder="숫자만 입력" value="0" name="sales_volume">
-                    <label for="price_input">원</label>
                 </div>
                 <!-- <div class="discount_box">
                     <p>할인</p>
@@ -133,9 +121,10 @@
                 <div class="standard">
                     <strong>옵션</strong>
                     <p>필수</p>
-                    <label for="is_option">옵션 선택</label><input type="checkbox" name="is_option">
+                    <label for="is_option">옵션 선택</label><input type="checkbox" name="is_option" id="is_option">
                 </div>
-                <div id="option_fields_container">
+                <div id="option_fields_container" style="display: none;">
+                    <button type="button" id="add_option">옵션 추가하기</button>
                     <div class="option_fields">
                         <label for="option_name">옵션 이름 :</label>
                         <input type="text" name="options-option_name[]" id="option_name" placeholder="옵션 이름 (예: 색상)"><br>
@@ -155,9 +144,9 @@
                         <label for="option_stock">재고 :</label>
                         <input type="number" name="options-option_stock[]" id="option_stock" placeholder="수량"><br>
                     </div>
+                    
                 </div>
                 
-                <button type="button" id="add_option">옵션 추가하기</button>
                 {% comment %} <div class="option">
                     <input type="text" id="option_name" placeholder="옵션 이름 (예: 색상)">
                     <input type="text" id="option_value" placeholder="옵션 값 (예: 빨강, 파랑)">
@@ -380,6 +369,25 @@ function removeOption(button) {
         
         // Trigger the initial stock update
         updateStockInput();
+    });
+</script>
+<script>
+    // 페이지 로딩 후 실행할 함수
+    document.addEventListener("DOMContentLoaded", function () {
+        // 옵션 선택 체크박스 요소 가져오기
+        var isOptionCheckbox = document.getElementById("is_option");
+
+        // 옵션 선택 체크박스의 변화를 감지하는 이벤트 리스너 등록
+        isOptionCheckbox.addEventListener("change", function () {
+            // 옵션 선택 체크박스가 체크되었는지 확인
+            var isOptionChecked = isOptionCheckbox.checked;
+
+            // 옵션 입력 필드들을 포함한 컨테이너 요소 가져오기
+            var optionFieldsContainer = document.getElementById("option_fields_container");
+
+            // 옵션 선택 체크박스에 따라 컨테이너를 활성화 또는 비활성화
+            optionFieldsContainer.style.display = isOptionChecked ? "block" : "none";
+        });
     });
 </script>
 </html>
