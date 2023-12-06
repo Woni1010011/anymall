@@ -8,6 +8,7 @@
 {% load static %}
 <!doctype html>
 <html lang="en">
+
 <head>
 	<link href="{% static 'css/product.css' %}" rel="stylesheet">
 	<title>Anymall</title>
@@ -30,71 +31,113 @@
 					<div class="product_description">{{product.product_description}}</div>
 					<div class="product-price">{{product.product_price}}</div>
 					<br>
-					{% if product.is_option %}
-						{% for option in options %}
-							<div class="product-option">
-								<select name="option-selectbox" id="" class="option-selectbox">
-									<option class="option_value" value="none">{{ option.option_name }}</option>
-									<option class="option_value" value="{{ option.option_value }}">{{ option.option_value }}</option>
-								</select>
-									{% if option.option_name_add %}
-								<select name="option-selectbox" id="" class="option-selectbox">
-									<option class="option_value" value="none">{{ option.option_name_add }}</option>
-									<option class="option_value" value="{{ option.option_value_add }}">{{ option.option_value_add }} (+{{ option.option_amount }}원)</option>
-									
-									{% endif %}
-								</select>
-							</div>
+					<!-- 주 옵션 -->
+					<select id="primary-option" onchange="updateSecondaryOptions()">
+						<option value="">-- 옵션 선택 --</option>
+						{% for option_name, values in optionGroups.items %}
+						{% for option_value, _ in values.items %}
+						<option value="{{ option_name }}|{{ option_value }}">{{ option_name }}: {{ option_value }}
+						</option>
 						{% endfor %}
-					{% endif %}
-					<div class="purchase-btn">
-						<p><a href="" class="btn btn-white-outline">장바구니</a> <a href="#" class="btn btn-secondary me-2">바로구매</a></p>
+						{% endfor %}
+					</select>
+
+					<!-- 부가 옵션 -->
+					<div id="secondary-options">
+
+
 					</div>
+
+					<div></div>
+
+
+					<div class="purchase-btn">
+						<p><a href="" class="btn btn-white-outline">장바구니</a> <a href="#"
+								class="btn btn-secondary me-2">바로구매</a></p>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+		<!-- End Product Section -->
+
+		<!-- Start Product detail Section -->
+		<div class="why-choose-section">
+			<div class="container">
+				<div class="row my-5">
+					{% for image in product.product_images.all %}
+					<img src="{{ image.image.url }}" alt="{{ product.product_name }} detail image">
+					{% endfor %}
 				</div>
 			</div>
-			
 		</div>
-	</div>
-	<!-- End Product Section -->
 
-	<!-- Start Product detail Section -->
-	<div class="why-choose-section">
-		<div class="container">
-			<div class="row my-5">
-				{% for image in product.product_images.all %}
-				<img src="{{ image.image.url }}" alt="{{ product.product_name }} detail image">
-				{% endfor %}
-			</div>
-		</div>
-	</div>
+		{% endblock %}
+		<!-- End Why Choose Us Section -->
 
-	{% endblock %}
-	<!-- End Why Choose Us Section -->
+		<!-- Start Review Section -->
+		{% comment %} {% include 'Review.html' %} {% endcomment %}
 
-	<!-- Start Review Section -->
-	{% comment %} {% include 'Review.html' %} {% endcomment %}
+		{% include 'footer.html' %}
 
-	{% include 'footer.html' %}
-
-	<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-	<script src="{% static 'js/tiny-slider.js' %}"></script>
-	<script src="{% static 'js/custom.js' %}"></script>
+		<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+		<script src="{% static 'js/tiny-slider.js' %}"></script>
+		<script src="{% static 'js/custom.js' %}"></script>
 </body>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const selectboxes = document.querySelectorAll('.option-selectbox');
+	document.addEventListener('DOMContentLoaded', function () {
+		const selectboxes = document.querySelectorAll('.option-selectbox');
 
-        selectboxes.forEach(selectbox => {
-            selectbox.addEventListener('change', function () {
-                const selectedOption = this.options[this.selectedIndex];
-                const amountSelector = this.getAttribute('data-amount-selector');
-                const amountSpan = document.querySelector(amountSelector);
+		selectboxes.forEach(selectbox => {
+			selectbox.addEventListener('change', function () {
+				const selectedOption = this.options[this.selectedIndex];
+				const amountSelector = this.getAttribute('data-amount-selector');
+				const amountSpan = document.querySelector(amountSelector);
 
-                // Update the amount span with the selected option's amount
-                amountSpan.textContent = selectedOption.dataset.amount || 0;
-            });
-        });
-    });
+				// Update the amount span with the selected option's amount
+				amountSpan.textContent = selectedOption.dataset.amount || 0;
+			});
+		});
+	});
+</script>
+
+<script>
+	function updateSecondaryOptions() {
+		const selectedValue = document.getElementById('primary-option').value;
+		const [optionName, optionValue] = selectedValue.split('|');
+		const secondaryOptionsContainer = document.getElementById('secondary-options');
+
+		// 기존 부가 옵션 내용을 지웁니다
+		secondaryOptionsContainer.innerHTML = '';
+
+		// 선택된 주 옵션에 대한 부가 옵션을 동적으로 생성합니다
+		if (optionGroups[optionName] && optionGroups[optionName][optionValue]) {
+			const secondaryOptions = optionGroups[optionName][optionValue];
+			const select = document.createElement('select');
+
+			// 기본 옵션 추가
+			const defaultOption = new Option('-- 추가 옵션 선택 --', '');
+			select.appendChild(defaultOption);
+
+			// 각 부가 옵션 추가
+			secondaryOptions.forEach(function (option) {
+				const optionText = `${option.option_name_add}: ${option.option_value_add} (추가비용: ${option.amount}원)`;
+				const optionElement = new Option(optionText, option.option_value_add);
+				select.appendChild(optionElement);
+			});
+
+			secondaryOptionsContainer.appendChild(select);
+		}
+	}
+
+
+
+
+</script>
+
+<script type="text/javascript">
+	const optionGroups = {{ optionGroups| safe }};
 </script>
 
 </html>

@@ -1,3 +1,4 @@
+from collections import defaultdict
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from .models import *
@@ -143,16 +144,26 @@ def shop(request):
 
 
 def product(request, product_no):
-    product = get_object_or_404(Product, product_no=product_no)
+    product = Product.objects.get(pk=product_no)
+    options = product.options.all()
 
-    options = []
-    if product.is_option:
-        options = OptionList.objects.filter(product_no=product)
+    
+     # 주 옵션 및 부가 옵션 그룹화
+    optionGroups = defaultdict(lambda: defaultdict(list))
+    for option in options:
+        primary_key = (option.option_name, option.option_value)
+        optionGroups[primary_key[0]][primary_key[1]].append({
+            'option_name_add': option.option_name_add,
+            'option_value_add': option.option_value_add,
+            'amount': option.option_amount
+        })
+
 
     context = {
         'product': product,
-        'options': options,
+        'optionGroups': dict((k, dict(v)) for k, v in optionGroups.items())
     }
+
     return render(request, "product.html", context)
 
 from django.contrib.auth.decorators import login_required
