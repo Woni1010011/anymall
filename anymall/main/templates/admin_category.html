@@ -89,9 +89,5 @@
         var result = confirm(categoryName + " 카테고리를 삭제하시겠습니까?");
         return result;
     }
-    {% if result %}
-    alert("{{ result }}");
-    window.history.back();
-    {% endif %}
 </script>
 </html>

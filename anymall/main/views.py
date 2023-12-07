@@ -171,6 +171,21 @@ def product(request, product_no):
     return render(request, "product.html", context)
 
 
+def delete_product(request, product_no):
+    # 상품 객체 가져오기
+    product = get_object_or_404(Product, pk=product_no)
+
+    # POST 요청인 경우 상품 삭제
+    if request.method == "POST":
+        product.delete()
+        # 삭제 후 리다이렉트 또는 원하는 다른 동작 수행
+        return redirect("admin_product")
+
+    # GET 요청인 경우 삭제 확인 페이지 표시
+    context = {"product": product}
+    return render(request, "admin_product.html", context)
+
+
 from django.contrib.auth.decorators import login_required
 from django.utils.formats import date_format
 
@@ -262,7 +277,8 @@ def delete_category(request, category_id):
             return redirect("admin_category")
     else:
         return render(request, template, context)
-    
+
+
 def admin_product(request):
     if request.method == "POST":
         product_no = request.POST.get("product_no")
@@ -296,7 +312,6 @@ def admin_set(request, product_no=None):
     if product_no:
         product = get_object_or_404(Product, product_no=product_no)
         existing_options = OptionList.objects.filter(product_no=product)
-
 
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES, instance=product)

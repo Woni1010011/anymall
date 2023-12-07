@@ -1,6 +1,7 @@
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from . import views
+from .views import delete_product
 
 urlpatterns = [
     path("", views.home, name="home"),
@@ -15,6 +16,7 @@ urlpatterns = [
     ),
     path("shop", views.shop, name="shop"),
     path("product/<int:product_no>/", views.product, name="product"),
+    path("delete_product/<int:product_no>/", delete_product, name="delete_product"),
     path("mypage", views.mypage, name="mypage"),
     path("pwd_verify/", views.pwd_verify, name="pwd_verify"),
     path("edit_info/", views.edit_info, name="edit_info"),

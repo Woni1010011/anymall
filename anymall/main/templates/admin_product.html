@@ -48,11 +48,13 @@
                     <div class='delete_box'>
                         {{ product.product_id }}
                         {{ product.product_name }}
-                        <a href="{% url 'admin_set' product_no=product.product_no %}"><button>수정</button></a>
-                        <form method="POST" action="" onsubmit="return confirmDelete(event, '{{ category.category_name }}')">
-                            {% csrf_token %}
-                            <button type="submit">삭제</button>
-                        </form>
+                        <div style="display:flex">
+                            <a href="{% url 'admin_set' product_no=product.product_no %}"><button>수정</button></a>
+                            <form method="POST" action="{% url 'delete_product' product_no=product.product_no %}" onsubmit="return confirmDelete(event, '{{ product.product_name }}')">
+                                {% csrf_token %}
+                                <button type="submit" name="delete_product">삭제</button>
+                            </form>
+                        </div>
                     </div>
                     {% endfor %}
                 </div>
@@ -71,13 +73,9 @@
     });
 </script>
 <script>
-    function confirmDelete(event, categoryName) {
-        var result = confirm(categoryName + " 카테고리를 삭제하시겠습니까?");
+    function confirmDelete(event, productName) {
+        var result = confirm(productName + " 상품을 삭제하시겠습니까?");
         return result;
     }
-    {% if result %}
-    alert("{{ result }}");
-    window.history.back();
-    {% endif %}
 </script>
 </html>
