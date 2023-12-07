@@ -244,6 +244,16 @@ def delete_category(request, category_id):
             return redirect("admin_category")
     else:
         return render(request, template, context)
+    
+def admin_product(request):
+    if request.method == "POST":
+        product_no = request.POST.get("product_no")
+        products = Product(product_no=product_no)
+        products.save()
+        return redirect("admin_product")
+    else:
+        products = Product.objects.all()
+        return render(request, "admin_product.html", {"products": products})
 
 from django.views.generic.edit import View
 
