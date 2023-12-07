@@ -1,4 +1,3 @@
-from collections import defaultdict
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from .models import *
@@ -144,26 +143,16 @@ def shop(request):
 
 
 def product(request, product_no):
-    product = Product.objects.get(pk=product_no)
-    options = product.options.all()
+    product = get_object_or_404(Product, product_no=product_no)
 
-    
-     # 주 옵션 및 부가 옵션 그룹화
-    optionGroups = defaultdict(lambda: defaultdict(list))
-    for option in options:
-        primary_key = (option.option_name, option.option_value)
-        optionGroups[primary_key[0]][primary_key[1]].append({
-            'option_name_add': option.option_name_add,
-            'option_value_add': option.option_value_add,
-            'amount': option.option_amount
-        })
-
+    options = []
+    if product.is_option:
+        options = OptionList.objects.filter(product_no=product)
 
     context = {
         'product': product,
-        'optionGroups': dict((k, dict(v)) for k, v in optionGroups.items())
+        'options': options,
     }
-
     return render(request, "product.html", context)
 
 from django.contrib.auth.decorators import login_required
@@ -258,11 +247,15 @@ def delete_category(request, category_id):
 
 from django.views.generic.edit import View
 
-def admin_set(request):
+def admin_set(request, product_no=None):
     category = Category.objects.all()
-
+    product = None
+    
+    if product_no:
+        product = get_object_or_404(Product, product_no=product_no)
+    
     if request.method == "POST":
-        form = ProductForm(request.POST, request.FILES)
+        form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             product = form.save(commit=False)
             product.save()
@@ -294,11 +287,17 @@ def admin_set(request):
                         option_stock=stock,
                     )
 
-            return redirect("shop")
+            return redirect("shop", product_no=product.product_no)
         else:
             print("폼 유효성 검사 실패:", form.errors)
     else:
-        form = ProductForm()
+        form = ProductForm(instance=product)
 
-    context = {'category': category, 'form': form}
-    return render(request, "admin_set.html", context)
+    template = "admin_set.html"
+    context = {
+        'category': category,
+        'form': form,
+        'product':product,
+        'update_mode': product_no is not None,
+        }
+    return render(request, template, context)
