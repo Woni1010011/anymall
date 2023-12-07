@@ -1,11 +1,14 @@
+from collections import defaultdict
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from .models import *
 from .forms import *
 
+
 def home(request):
     # user = CustomUser.objects.get()  # User 대신 CustomUser를 사용합니다.
     return render(request, "index.html")
+
 
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -13,27 +16,29 @@ from django.urls import reverse
 
 
 def login_email(request):
-    if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
+    if request.method == "POST":
+        email = request.POST["email"]
+        password = request.POST["password"]
         user = authenticate(request, username=email, password=password)
 
         if user is not None:
             if user.email_verified:
                 login(request, user)
-                messages.success(request, '로그인을 성공하였습니다.')
-                return redirect('/')
+                messages.success(request, "로그인을 성공하였습니다.")
+                return redirect("/")
             else:
-                messages.error(request, '이메일 인증이 필요합니다. 이메일을 확인해 주세요.')
-                return render(request, 'login_email.html')  # 로그인 페이지를 다시 보여줍니다.
+                messages.error(request, "이메일 인증이 필요합니다. 이메일을 확인해 주세요.")
+                return render(request, "login_email.html")  # 로그인 페이지를 다시 보여줍니다.
         else:
-            messages.error(request, '이메일 또는 비밀번호가 잘못되었습니다.')
-            return render(request, 'login_email.html')  # 로그인 페이지를 다시 보여줍니다.
+            messages.error(request, "이메일 또는 비밀번호가 잘못되었습니다.")
+            return render(request, "login_email.html")  # 로그인 페이지를 다시 보여줍니다.
 
-    return render(request, 'login_email.html')  # 로그인 페이지를 처음 접속했을 때 보여줍니다.
+    return render(request, "login_email.html")  # 로그인 페이지를 처음 접속했을 때 보여줍니다.
+
 
 def sign_in(request):
     return render(request, "sign_in.html")
+
 
 import re
 from django.contrib import messages
@@ -62,6 +67,7 @@ from django.core.signing import TimestampSigner, BadSignature, SignatureExpired
 from django.http import HttpResponse
 from .models import CustomUser
 
+
 def verify_email(request, token):
     signer = TimestampSigner()
     try:
@@ -76,151 +82,161 @@ def verify_email(request, token):
 
 from django.db import IntegrityError
 
+
 def sign_up(request):
-    if request.method == 'POST':
-        username = request.POST.get('name')
-        email = request.POST.get('email')
-        password = request.POST.get('pwd')
-        password_confirm = request.POST.get('pwd_check')
-        user_phone = request.POST.get('phone')
-        zip_code = request.POST.get('post_code')
-        user_address = request.POST.get('adress')
-        birth_date = request.POST.get('birth')
-        gender = request.POST.get('male_or_female')
+    if request.method == "POST":
+        username = request.POST.get("name")
+        email = request.POST.get("email")
+        password = request.POST.get("pwd")
+        password_confirm = request.POST.get("pwd_check")
+        user_phone = request.POST.get("phone")
+        zip_code = request.POST.get("post_code")
+        user_address = request.POST.get("adress")
+        birth_date = request.POST.get("birth")
+        gender = request.POST.get("male_or_female")
 
         # 비밀번호 유효성 검사
         if password != password_confirm:
-            messages.error(request, '비밀번호가 일치하지 않습니다.')
-            return redirect('sign_up')
+            messages.error(request, "비밀번호가 일치하지 않습니다.")
+            return redirect("sign_up")
 
         try:
             validate_password(password)
         except ValidationError as e:
             messages.error(request, str(e))
-            return redirect('sign_up')
+            return redirect("sign_up")
 
         # 사용자 생성
         try:
             user = CustomUser.objects.create_user(
-                email=email, 
-                username=username, 
-                password=password, 
-                user_phone=user_phone, 
-                zip_code=zip_code, 
+                email=email,
+                username=username,
+                password=password,
+                user_phone=user_phone,
+                zip_code=zip_code,
                 user_address=user_address,
             )
-            
+
             # 이메일 인증 토큰 생성 및 발송
             signer = TimestampSigner()
             token = signer.sign(user.email)
             verification_url = f"{settings.SITE_URL}/verify/{token}/"
             send_mail(
-                'Verify your account',
-                f'Please click on the link to verify your account: {verification_url}',
+                "Verify your account",
+                f"Please click on the link to verify your account: {verification_url}",
                 settings.EMAIL_HOST_USER,
                 [user.email],
                 fail_silently=False,
             )
 
-            messages.success(request, '회원가입이 성공적으로 완료되었습니다. 인증 이메일을 확인해 주세요.')
-            return redirect('login_email')
+            messages.success(request, "회원가입이 성공적으로 완료되었습니다. 인증 이메일을 확인해 주세요.")
+            return redirect("login_email")
 
         except IntegrityError:
-            messages.error(request, '이미 존재하는 전화번호입니다. 다른 전화번호를 사용해 주세요.')
-            return render(request, 'sign_up.html')
+            messages.error(request, "이미 존재하는 전화번호입니다. 다른 전화번호를 사용해 주세요.")
+            return render(request, "sign_up.html")
 
     else:
-        return render(request, 'sign_up.html')
+        return render(request, "sign_up.html")
+
 
 def shop(request):
-
     product = Product.objects.all()
 
-    context = {
-        'products':product
-    }
+    context = {"products": product}
     return render(request, "shop.html", context)
 
 
 def product(request, product_no):
-    product = get_object_or_404(Product, product_no=product_no)
+    product = Product.objects.get(pk=product_no)
+    options = product.options.all()
 
-    options = []
-    if product.is_option:
-        options = OptionList.objects.filter(product_no=product)
+    # 주 옵션 및 부가 옵션 그룹화
+    optionGroups = defaultdict(lambda: defaultdict(list))
+    for option in options:
+        primary_key = (option.option_name, option.option_value)
+        optionGroups[primary_key[0]][primary_key[1]].append(
+            {
+                "option_name_add": option.option_name_add,
+                "option_value_add": option.option_value_add,
+                "amount": option.option_amount,
+            }
+        )
 
     context = {
-        'product': product,
-        'options': options,
+        "product": product,
+        "optionGroups": dict((k, dict(v)) for k, v in optionGroups.items()),
     }
+
     return render(request, "product.html", context)
+
 
 from django.contrib.auth.decorators import login_required
 from django.utils.formats import date_format
 
 
-
 @login_required
 def mypage(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('mypage')  # 프로필이 업데이트된 후 같은 페이지로 리디렉트
+            return redirect("mypage")  # 프로필이 업데이트된 후 같은 페이지로 리디렉트
     else:
         form = CustomUserChangeForm(instance=request.user)
-    
+
     user = request.user
     context = {
-        'form': form,  # 프로필 업데이트 폼 추가
-        'user_name': user.username,
-        'user_grade': user.grade,
-        'sub_date': date_format(user.sub_date, "SHORT_DATE_FORMAT"),
-        'user_email': user.email,
-        'user_phone': user.user_phone,
-        'user_point': user.user_point,
-        'user_bank_account':user.refund_bank_name,
-        'user_bank_account_num': user.refund_account_number,
-        'user_birth': user.birth_date,
-        'user_gender': user.gender,
-        'user_zipcode': user.zip_code,
-        'user_address': user.user_address,
+        "form": form,  # 프로필 업데이트 폼 추가
+        "user_name": user.username,
+        "user_grade": user.grade,
+        "sub_date": date_format(user.sub_date, "SHORT_DATE_FORMAT"),
+        "user_email": user.email,
+        "user_phone": user.user_phone,
+        "user_point": user.user_point,
+        "user_bank_account": user.refund_bank_name,
+        "user_bank_account_num": user.refund_account_number,
+        "user_birth": user.birth_date,
+        "user_gender": user.gender,
     }
-    
-    return render(request, 'mypage.html', context)
+
+    return render(request, "mypage.html", context)
+
 
 @login_required
 def pwd_verify(request):
-    if request.method == 'POST':
-        password = request.POST.get('password')
-        # USERNAME_FIELD가 'email'로 설정되어 있으므로, email을 사용합니다.
-        user = authenticate(email=request.user.email, password=password)
+    if request.method == "POST":
+        password = request.POST.get("password")
+        user = authenticate(username=request.user.username, password=password)
         if user is not None:
-            request.session['pwd_verified'] = True
-            return redirect('edit_info')
+            request.session["pwd_verified"] = True  # 세션에 표시
+            return redirect("edit_info")
         else:
-            messages.error(request, '비밀번호가 틀렸습니다. 다시 입력해주세요.')
+            messages.error(request, "비밀번호가 틀렸습니다. 다시 입력해주세요.")  # 메시지 추가
+    return render(request, "pwd_verify.html")
 
-    return render(request, 'pwd_verify.html')
 
 @login_required
 def edit_info(request):
-    if not request.session.get('pwd_verified', False):
-        return redirect('pwd_verify')
+    if not request.session.get("pwd_verified", False):
+        # 비밀번호 검증을 통과하지 못했으면 pwd_verify로 리디렉트
+        return redirect("pwd_verify")
 
-    if request.method == 'POST':
+    # 비밀번호 검증을 통과했으면 나머지 로직 수행
+    if request.method == "POST":
         form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            del request.session['pwd_verified']
-            messages.success(request, '정보가 업데이트되었습니다.')
-            return redirect('mypage')
+            del request.session["pwd_verified"]  # 세션에서 플래그 제거
+            return redirect("mypage")
         else:
-            messages.error(request, '입력한 정보가 유효하지 않습니다.')
+            # 폼이 유효하지 않을 경우의 처리
+            pass
     else:
         form = CustomUserChangeForm(instance=request.user)
 
-    return render(request, 'edit_info.html', {'form': form})
+    return render(request, "edit_info.html", {"form": form})
+
 
 def admin_category(request):
     if request.method == "POST":
@@ -257,38 +273,58 @@ def admin_product(request):
         products = Product.objects.all()
         return render(request, "admin_product.html", {"products": products})
 
+
+def admin_product(request):
+    if request.method == "POST":
+        product_no = request.POST.get("product_no")
+        products = Product(product_no=product_no)
+        products.save()
+        return redirect("admin_product")
+    else:
+        products = Product.objects.all()
+        return render(request, "admin_product.html", {"products": products})
+
+
 from django.views.generic.edit import View
+
 
 def admin_set(request, product_no=None):
     category = Category.objects.all()
     product = None
-    
+
     if product_no:
         product = get_object_or_404(Product, product_no=product_no)
-    
+
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             product = form.save(commit=False)
             product.save()
-            
-            for image in request.FILES.getlist('product_images'):
+
+            for image in request.FILES.getlist("product_images"):
                 product_image = ProductImage.objects.create()
                 product_image.image = image
                 product_image.save()
                 product.product_images.add(product_image)
 
-            if form.cleaned_data['is_option']:
+            if form.cleaned_data["is_option"]:
                 # Get the list of options from the submitted form
-                option_names = request.POST.getlist('options-option_name[]')
-                option_values = request.POST.getlist('options-option_value[]')
-                option_names_add = request.POST.getlist('options-option_name_add[]')
-                option_values_add = request.POST.getlist('options-option_value_add[]')
-                option_amounts = request.POST.getlist('options-option_amount[]')
-                option_stocks = request.POST.getlist('options-option_stock[]')
+                option_names = request.POST.getlist("options-option_name[]")
+                option_values = request.POST.getlist("options-option_value[]")
+                option_names_add = request.POST.getlist("options-option_name_add[]")
+                option_values_add = request.POST.getlist("options-option_value_add[]")
+                option_amounts = request.POST.getlist("options-option_amount[]")
+                option_stocks = request.POST.getlist("options-option_stock[]")
 
                 # Create OptionList records for each option
-                for name, value, name_add, value_add, amount, stock in zip(option_names, option_values, option_names_add, option_values_add, option_amounts, option_stocks):
+                for name, value, name_add, value_add, amount, stock in zip(
+                    option_names,
+                    option_values,
+                    option_names_add,
+                    option_values_add,
+                    option_amounts,
+                    option_stocks,
+                ):
                     OptionList.objects.create(
                         product_no=product,
                         option_name=name,
@@ -307,9 +343,9 @@ def admin_set(request, product_no=None):
 
     template = "admin_set.html"
     context = {
-        'category': category,
-        'form': form,
-        'product':product,
-        'update_mode': product_no is not None,
-        }
+        "category": category,
+        "form": form,
+        "product": product,
+        "update_mode": product_no is not None,
+    }
     return render(request, template, context)
