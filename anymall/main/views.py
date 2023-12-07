@@ -183,6 +183,8 @@ def mypage(request):
         'user_bank_account_num': user.refund_account_number,
         'user_birth': user.birth_date,
         'user_gender': user.gender,
+        'user_zipcode': user.zip_code,
+        'user_address': user.user_address,
     }
     
     return render(request, 'mypage.html', context)
@@ -191,30 +193,30 @@ def mypage(request):
 def pwd_verify(request):
     if request.method == 'POST':
         password = request.POST.get('password')
-        user = authenticate(username=request.user.username, password=password)
+        # USERNAME_FIELD가 'email'로 설정되어 있으므로, email을 사용합니다.
+        user = authenticate(email=request.user.email, password=password)
         if user is not None:
-            request.session['pwd_verified'] = True  # 세션에 표시
+            request.session['pwd_verified'] = True
             return redirect('edit_info')
         else:
-            messages.error(request, '비밀번호가 틀렸습니다. 다시 입력해주세요.')  # 메시지 추가
+            messages.error(request, '비밀번호가 틀렸습니다. 다시 입력해주세요.')
+
     return render(request, 'pwd_verify.html')
 
 @login_required
 def edit_info(request):
     if not request.session.get('pwd_verified', False):
-        # 비밀번호 검증을 통과하지 못했으면 pwd_verify로 리디렉트
         return redirect('pwd_verify')
 
-    # 비밀번호 검증을 통과했으면 나머지 로직 수행
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            del request.session['pwd_verified']  # 세션에서 플래그 제거
+            del request.session['pwd_verified']
+            messages.success(request, '정보가 업데이트되었습니다.')
             return redirect('mypage')
         else:
-            # 폼이 유효하지 않을 경우의 처리
-            pass
+            messages.error(request, '입력한 정보가 유효하지 않습니다.')
     else:
         form = CustomUserChangeForm(instance=request.user)
 

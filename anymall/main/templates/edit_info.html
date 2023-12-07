@@ -1,25 +1,59 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>My Page</title>
+    <link rel="stylesheet" href="css/edit_info.css">
 </head>
 <body>
-    <!-- edit_info.html -->
-    <form action="{% url 'edit_info' %}" method="POST">
-        {% csrf_token %}
-        <label for="email">이메일:</label>
-        <input type="email" id="email" name="email" value="{{ user_email }}">
-
-        <label for="name">이름:</label>
-        <input type="text" id="name" name="name" value="{{ user_name }}">
-
-        <label for="phone">휴대전화:</label>
-        <input type="tel" id="phone" name="phone" value="{{ user_phone }}">
-
-        <input type="submit" value="정보 수정">
-    </form>
-
+    <div class="mypage-container">
+        <main class="content">
+            <div class="user_info">
+                <!-- 기존 사용자 정보 표시 -->
+                <div class="st_pic_info">
+                    <p>이메일</p>
+                    <strong>{{ user.email }}</strong>
+                </div>
+                <div class="st_pic_info">
+                    <p>이름</p>
+                    <strong>{{ user.username }}</strong>
+                </div>
+                <div class="st_pic_info">
+                    <p>휴대전화</p>
+                    <strong>{{ user.user_phone }}</strong>
+                </div>
+            </div>
+            
+            <div class="edit_info_form">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="st_pic_info">
+                        <p>이메일 변경</p>
+                        {{ form.email }}
+                    </div>
+                    <div class="st_pic_info">
+                        <p>이름 변경</p>
+                        {{ form.username }}
+                    </div>
+                    <div class="st_pic_info">
+                        <p>휴대전화 변경</p>
+                        {{ form.user_phone }}
+                    </div>
+                    <div class="st_pic_info">
+                        <p>새 패스워드</p>
+                        {{ form.new_password1 }}
+                    </div>
+                    <div class="st_pic_info">
+                        <p>새 패스워드 확인</p>
+                        {{ form.new_password2 }}
+                    </div>
+                    <button type="submit">정보 수정</button>
+                </form>
+            </div>
+            
+        </main>
+    </div>
 </body>
 </html>
