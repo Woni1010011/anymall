@@ -55,7 +55,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     refund_account_number = models.CharField(max_length=50, null=True, blank=True) # 환불 계좌 번호
     birth_date = models.DateField(null=True, blank=True) # 사용자가 이 필드를 비워둘 수 있습니다.
     gender = models.CharField(max_length=10, choices=(('male', '남자'), ('female', '여자')), null=True, blank=True) # 이 필드도 선택적입니다.
-
+    profile_picture = models.ImageField(
+        upload_to='profile_pictures/',
+        null=True,
+        blank=True,
+        default='images/default_profile.jpg'  # static 경로는 여기에 포함시키지 않습니다.
+    )
 
     # 관리자 권한 여부 (기본값은 False)
     is_admin = models.BooleanField(default=False)

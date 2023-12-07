@@ -18,6 +18,7 @@ urlpatterns = [
     path("mypage", views.mypage, name="mypage"),
     path("pwd_verify/", views.pwd_verify, name="pwd_verify"),
     path("edit_info/", views.edit_info, name="edit_info"),
+    path('delete-account/', views.delete_account, name='delete_account'),
     path("login_email", views.login_email, name="login_email"),
     path("sign_in", views.sign_in, name="sign_in"),
     path("sign_up", views.sign_up, name="sign_up"),
