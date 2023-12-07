@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Page</title>
     <link rel="stylesheet" href="/static/css/mypage.css">
+    <script src="{% static 'js/mypage.js' %}"></script>
+
 </head>
 <body>
     <header class="header">
@@ -27,7 +29,7 @@
             <div class="my_top_btn">
                 <a href="#cart">장바구니</a>
                 <a href="#cs">고객센터</a>
-                <a href="#logout">로그아웃</a>
+                <a href="{% url 'logout' %}">로그아웃</a>
             </div>
         </div>
         <div class="my_body">
@@ -129,13 +131,13 @@
                 </div>
                 <div class="st_pic_info">
                     <p>환불계좌</p>
-                    <strong>[{{user_bank_account}}]  {{user_bank_account_num}}</strong>
+                    <strong>{{user_bank_account}}  {{user_bank_account_num}}</strong>
                     <button>환불계좌 관리</button>
                 </div>
                 <div class="st_pic_info">
                     <p>배송지</p>
-                    <strong>[{{zipcode}}]  {{user_address}}</strong>
-                    <button>배송지 관리</button>
+                    <strong>[{{user_zipcode}}]  {{user_address}}</strong>
+                    <button>기본배송지</button>
                 </div>
             </div>
             <div class="alarm">

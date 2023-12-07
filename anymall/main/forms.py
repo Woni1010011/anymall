@@ -37,6 +37,24 @@ class CustomUserCreationForm(UserCreationForm):
 from django.contrib.auth.forms import UserChangeForm
 
 class CustomUserChangeForm(UserChangeForm):
+    new_password1 = forms.CharField(label='New Password', widget=forms.PasswordInput)
+    new_password2 = forms.CharField(label='Confirm New Password', widget=forms.PasswordInput)
+
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'user_phone')
+        fields = ('username', 'email', 'user_phone', 'new_password1', 'new_password2')
+
+    def clean_new_password2(self):
+        password1 = self.cleaned_data.get('new_password1')
+        password2 = self.cleaned_data.get('new_password2')
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Passwords don't match")
+        return password2
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if self.cleaned_data['new_password1']:
+            user.set_password(self.cleaned_data['new_password1'])
+        if commit:
+            user.save()
+        return user
