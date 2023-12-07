@@ -99,29 +99,40 @@
                 <div class="standard">
                     <strong>옵션</strong>
                     <p>필수</p>
-                    <label for="is_option">옵션 선택</label><input type="checkbox" name="is_option" id="is_option">
+                    <label for="is_option">옵션 선택</label><input type="checkbox" name="is_option" id="is_option" {% if existing_options %}checked{% endif %}>
                 </div>
-                <div id="option_fields_container" style="display: none;">
+                {% if existing_options %}
+                <div id="option_fields_container">
                     <button type="button" id="add_option">옵션 추가하기</button>
+                    {% for option in existing_options %}
                     <div class="option_fields">
                         <label for="option_name">옵션 이름 :</label>
-                        <input type="text" name="options-option_name[]" id="option_name" placeholder="옵션 이름 (예: 색상)"><br>
+                        <input type="text" name="options-option_name[]" id="option_name" placeholder="옵션 이름 (예: 색상)" value="{{ option.option_name }}"><br>
                 
                         <label for="option_value">옵션 값 :</label>
-                        <input type="text" name="options-option_value[]" id="option_value" placeholder="옵션 값 (예: 빨강, 파랑)"><br>
+                        <input type="text" name="options-option_value[]" id="option_value" placeholder="옵션 값 (예: 빨강, 파랑)" value="{{ option.option_value }}"><br>
                         
                         <label for="option_name">옵션 이름 추가 :</label>
-                        <input type="text" name="options-option_name_add[]" id="option_name" placeholder="옵션 이름 (예: 색상)"><br>
+                        <input type="text" name="options-option_name_add[]" id="option_name_add" placeholder="옵션 이름 (예: 색상)" value="{{ option.option_name_add }}"><br>
                 
                         <label for="option_value">옵션 값 추가 :</label>
-                        <input type="text" name="options-option_value_add[]" id="option_value" placeholder="옵션 값 (예: 빨강, 파랑)"><br>
+                        <input type="text" name="options-option_value_add[]" id="option_value_add" placeholder="옵션 값 (예: 빨강, 파랑)" value="{{ option.option_value_add }}"><br>
                 
                         <label for="option_amount">옵션 추가금액 :</label>
-                        <input type="number" name="options-option_amount[]" id="option_amount" placeholder="추가 금액"><br>
+                        <input type="number" name="options-option_amount[]" id="option_amount" placeholder="추가 금액" value="{{ option.option_amount}}"><br>
                         
                         <label for="option_stock">재고 :</label>
-                        <input type="number" name="options-option_stock[]" id="option_stock" placeholder="수량"><br>
+                        <input type="number" name="options-option_stock[]" id="option_stock" placeholder="수량" value="{{ option.option_stock }}"><br>
+                        
+                        <button type="button" class="delete_option_button">삭제</button><br>
                     </div>
+                    {% endfor %}
+                    {% else %}
+                    <div id="option_fields_container" style="display: none;">
+                        <button type="button" id="add_option">옵션 추가하기</button>
+                        
+                    {% endif %}
+                    
                 </div>
             </div>
             <div class="goods_info">
@@ -220,106 +231,102 @@ document.getElementById('detailInput').addEventListener('change', function(event
     labelElement.textContent = inputLength + '/100';
 });
 
-    {% comment %} // 옵션 추가
-    function addOption() {
-    var name = document.getElementById('option_name').value;
-    var value = document.getElementById('option_value').value;
-    var amount = document.getElementById('option_amount').value;
-
-    if(name && value && amount) {
-        var optionList = document.getElementById('options_list');
-        var optionItem = document.createElement('div');
-        optionItem.className = 'option-item';
-        optionItem.innerHTML = `
-            <span>${name}: ${value} | 추가 금액: ${amount}원</span>
-            <button type="button" onclick="removeOption(this)">-</button>
-        `;
-        
-        // 숨겨진 입력 필드를 생성하여 폼 데이터로 사용
-        var hiddenInput = document.createElement('input');
-        hiddenInput.type = 'hidden';
-        hiddenInput.name = 'options';
-        hiddenInput.value = JSON.stringify({ name, value, amount });
-        optionItem.appendChild(hiddenInput);
-
-        optionList.appendChild(optionItem);
-
-        // 입력 필드 초기화
-        document.getElementById('option_name').value = '';
-        document.getElementById('option_value').value = '';
-        document.getElementById('option_amount').value = '';
-    } else {
-        alert("모든 옵션 필드를 채워주세요.");
-    }
-}
-
-function removeOption(button) {
-    button.parentElement.remove();
-} {% endcomment %}
-
-
-
 </script>
 <script>
-    const optionFieldsContainer = document.getElementById('option_fields_container');
-    const addOptionButton = document.getElementById('add_option');
-    const optionFieldsTemplate = document.querySelector('.option_fields');
-
-    addOptionButton.addEventListener('click', () => {
-        const newOptionFields = optionFieldsTemplate.cloneNode(true);
-        newOptionFields.style.display = 'block';
-
-        // Clear input values in the cloned fields
-        newOptionFields.querySelectorAll('input').forEach(input => input.value = '');
-
-        optionFieldsContainer.appendChild(newOptionFields);
-
-        // Update stock input when a new option is added
-        updateStockInput();
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener("DOMContentLoaded", function () {
+        const optionFieldsContainer = document.getElementById('option_fields_container');
+        const addOptionButton = document.getElementById('add_option');
         const stockInput = document.getElementById('stock_input');
         const calculateStockButton = document.getElementById('calculate_stock_button');
-
-        calculateStockButton.addEventListener('click', updateStockInput);
-
+        const isOptionCheckbox = document.getElementById("is_option");
+    
+        // 삭제 버튼 클릭시 부모인 option_fields를 삭제
+        function registerDeleteButtonEvents() {
+            const deleteButtons = document.querySelectorAll('.delete_option_button');
+    
+            // 각 삭제 버튼에 대한 이벤트 리스너 등록
+            deleteButtons.forEach(deleteButton => {
+                deleteButton.addEventListener('click', () => {
+                    // 부모노드를 찾아 삭제
+                    const parentOptionFields = deleteButton.closest('.option_fields');
+                    optionFieldsContainer.removeChild(parentOptionFields);
+                    updateStockInput();
+                });
+            });
+        }
+    
         function updateStockInput() {
             const optionStockInputs = document.querySelectorAll('input[name^="options-option_stock[]"]');
-            let totalOptionStock = 0;
+            const productTotalStock = "{{ product.total_stock }}";
 
+            // Set the initial value for totalOptionStock
+            let totalOptionStock = productTotalStock ? parseInt(productTotalStock) : 0;
+    
             // Loop through all option_stock inputs to calculate total
             optionStockInputs.forEach(input => {
                 if (input.value !== "") {
                     totalOptionStock += parseInt(input.value);
                 }
             });
-
+    
             // Set the total in the stock input
             stockInput.value = totalOptionStock;
         }
-        
-        // Trigger the initial stock update
-        updateStockInput();
-    });
-</script>
-<script>
-    // 페이지 로딩 후 실행할 함수
-    document.addEventListener("DOMContentLoaded", function () {
-        // 옵션 선택 체크박스 요소 가져오기
-        var isOptionCheckbox = document.getElementById("is_option");
-
+    
+        // 옵션 추가하기 버튼 클릭시
+        addOptionButton.addEventListener('click', () => {
+            // 새로운 옵션 필드를 생성
+            const newOptionFields = document.createElement('div');
+            newOptionFields.className = 'option_fields';
+    
+            newOptionFields.innerHTML = `
+                <label for="option_name">옵션 이름 :</label>
+                <input type="text" name="options-option_name[]" placeholder="옵션 이름 (예: 색상)"><br>
+    
+                <label for="option_value">옵션 값 :</label>
+                <input type="text" name="options-option_value[]" placeholder="옵션 값 (예: 빨강, 파랑)"><br>
+    
+                <label for="option_name_add">옵션 이름 추가 :</label>
+                <input type="text" name="options-option_name_add[]" placeholder="옵션 이름 (예: 색상)"><br>
+    
+                <label for="option_value_add">옵션 값 추가 :</label>
+                <input type="text" name="options-option_value_add[]" placeholder="옵션 값 (예: 빨강, 파랑)"><br>
+    
+                <label for="option_amount">옵션 추가금액 :</label>
+                <input type="number" name="options-option_amount[]" placeholder="추가 금액"><br>
+    
+                <label for="option_stock">재고 :</label>
+                <input type="number" name="options-option_stock[]" placeholder="수량"><br>
+    
+                <button type="button" class="delete_option_button">삭제</button><br>
+            `;
+    
+            // 생성한 옵션 필드를 문서에 추가
+            optionFieldsContainer.appendChild(newOptionFields);
+    
+            // 삭제 버튼 이벤트 다시 등록
+            registerDeleteButtonEvents();
+    
+            // Update stock input when a new option is added
+            updateStockInput();
+        });
+    
         // 옵션 선택 체크박스의 변화를 감지하는 이벤트 리스너 등록
         isOptionCheckbox.addEventListener("change", function () {
             // 옵션 선택 체크박스가 체크되었는지 확인
             var isOptionChecked = isOptionCheckbox.checked;
-
+    
             // 옵션 입력 필드들을 포함한 컨테이너 요소 가져오기
-            var optionFieldsContainer = document.getElementById("option_fields_container");
-
-            // 옵션 선택 체크박스에 따라 컨테이너를 활성화 또는 비활성화
             optionFieldsContainer.style.display = isOptionChecked ? "block" : "none";
         });
+    
+        calculateStockButton.addEventListener('click', updateStockInput);
+    
+        // Trigger the initial stock update
+        updateStockInput();
+        // 삭제 버튼 이벤트 등록
+        registerDeleteButtonEvents();
     });
+    
 </script>
 </html>

@@ -291,9 +291,12 @@ from django.views.generic.edit import View
 def admin_set(request, product_no=None):
     category = Category.objects.all()
     product = None
+    existing_options = None
 
     if product_no:
         product = get_object_or_404(Product, product_no=product_no)
+        existing_options = OptionList.objects.filter(product_no=product)
+
 
     if request.method == "POST":
         form = ProductForm(request.POST, request.FILES, instance=product)
@@ -335,7 +338,7 @@ def admin_set(request, product_no=None):
                         option_stock=stock,
                     )
 
-            return redirect("shop", product_no=product.product_no)
+            return redirect("shop")
         else:
             print("폼 유효성 검사 실패:", form.errors)
     else:
@@ -347,5 +350,6 @@ def admin_set(request, product_no=None):
         "form": form,
         "product": product,
         "update_mode": product_no is not None,
+        "existing_options": existing_options,
     }
     return render(request, template, context)
