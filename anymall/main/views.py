@@ -188,19 +188,36 @@ def delete_product(request, product_no):
 
 from django.contrib.auth.decorators import login_required
 from django.utils.formats import date_format
+from django.contrib.auth import logout
 
 
 @login_required
 def mypage(request):
-    if request.method == "POST":
-        form = CustomUserChangeForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect("mypage")  # 프로필이 업데이트된 후 같은 페이지로 리디렉트
-    else:
-        form = CustomUserChangeForm(instance=request.user)
-
     user = request.user
+
+    if request.method == "POST":
+        # 회원 탈퇴 처리
+        if 'delete_account' in request.POST:
+            user.delete()  # 현재 사용자 삭제
+            logout(request)  # 세션 클리어 및 로그아웃
+            return redirect('home')  # 홈페이지로 리디렉트
+
+        # 환불 계좌 관련 데이터 처리
+        elif 'bank_account' in request.POST and 'bank_account_num' in request.POST:
+            user.refund_bank_name = request.POST['bank_account']
+            user.refund_account_number = request.POST['bank_account_num']
+            user.save()
+        
+        else:
+            # 기타 프로필 업데이트 관련 처리
+            form = CustomUserChangeForm(request.POST, instance=user)
+            if form.is_valid():
+                form.save()
+                return redirect('mypage')
+
+    else:
+        form = CustomUserChangeForm(instance=user)
+        
     context = {
         "form": form,  # 프로필 업데이트 폼 추가
         "user_name": user.username,
@@ -213,6 +230,9 @@ def mypage(request):
         "user_bank_account_num": user.refund_account_number,
         "user_birth": user.birth_date,
         "user_gender": user.gender,
+        "user_zipcode": user.zip_code,
+        "user_address": user.user_address,
+        "user_profile": user.profile_picture,
     }
 
     return render(request, "mypage.html", context)
@@ -222,36 +242,37 @@ def mypage(request):
 def pwd_verify(request):
     if request.method == "POST":
         password = request.POST.get("password")
-        user = authenticate(username=request.user.username, password=password)
+        user = authenticate(email=request.user.email, password=password)  # email을 사용하여 인증
         if user is not None:
-            request.session["pwd_verified"] = True  # 세션에 표시
+            request.session["pwd_verified"] = True
             return redirect("edit_info")
         else:
-            messages.error(request, "비밀번호가 틀렸습니다. 다시 입력해주세요.")  # 메시지 추가
+            messages.error(request, "비밀번호가 틀렸습니다. 다시 입력해주세요.")
     return render(request, "pwd_verify.html")
 
 
 @login_required
 def edit_info(request):
     if not request.session.get("pwd_verified", False):
-        # 비밀번호 검증을 통과하지 못했으면 pwd_verify로 리디렉트
         return redirect("pwd_verify")
 
-    # 비밀번호 검증을 통과했으면 나머지 로직 수행
     if request.method == "POST":
-        form = CustomUserChangeForm(request.POST, instance=request.user)
+        form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)  # request.FILES 추가
         if form.is_valid():
             form.save()
-            del request.session["pwd_verified"]  # 세션에서 플래그 제거
+            del request.session["pwd_verified"]
             return redirect("mypage")
-        else:
-            # 폼이 유효하지 않을 경우의 처리
-            pass
     else:
         form = CustomUserChangeForm(instance=request.user)
 
     return render(request, "edit_info.html", {"form": form})
 
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        request.user.delete()  # 현재 로그인한 사용자 삭제
+        logout(request)        # 세션 클리어 및 로그아웃
+        return redirect('home')  # 홈페이지로 리디렉트
 
 def admin_category(request):
     if request.method == "POST":

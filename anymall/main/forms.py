@@ -42,7 +42,7 @@ class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'user_phone', 'new_password1', 'new_password2')
+        fields = ('username', 'user_phone', 'new_password1', 'new_password2', 'profile_picture')
 
     def clean_new_password2(self):
         password1 = self.cleaned_data.get('new_password1')
@@ -58,3 +58,6 @@ class CustomUserChangeForm(UserChangeForm):
         if commit:
             user.save()
         return user
+
+
+        

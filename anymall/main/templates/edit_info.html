@@ -6,16 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Page</title>
     <link rel="stylesheet" href="css/edit_info.css">
+    <script src="{% static 'js/edit_info.js' %}"></script>
 </head>
 <body>
     <div class="mypage-container">
         <main class="content">
             <div class="user_info">
                 <!-- 기존 사용자 정보 표시 -->
-                <div class="st_pic_info">
-                    <p>이메일</p>
-                    <strong>{{ user.email }}</strong>
-                </div>
                 <div class="st_pic_info">
                     <p>이름</p>
                     <strong>{{ user.username }}</strong>
@@ -27,11 +24,16 @@
             </div>
             
             <div class="edit_info_form">
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="st_pic_info">
-                        <p>이메일 변경</p>
-                        {{ form.email }}
+                        <p>프로필 사진</p>
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" alt="Profile Picture" id="profileImagePreview">
+                        {% else %}
+                            <img src="{% static 'images/default_profile.jpg' %}" alt="Profile Picture" id="profileImagePreview">
+                        {% endif %}
+                        <input type="file" name="profile_picture" id="profilePictureInput" onchange="previewImage(this);">
                     </div>
                     <div class="st_pic_info">
                         <p>이름 변경</p>

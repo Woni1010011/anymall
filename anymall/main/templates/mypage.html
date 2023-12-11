@@ -34,11 +34,10 @@
         </div>
         <div class="my_body">
             <div class="my_left">
-                <img src="" alt="name">
+                <img src="{{ user.profile_picture.url }}" alt="Profile Picture" onerror="this.onerror=null;this.src='{% static 'images/default_profile.jpg' %}';">
                 <div class="user">
                     <div class="user_nick">
                         <strong>{{user_name}}</strong>
-                        <a href="#change_user_info">회원정보변경</a>
                     </div>
                     <div class="user_grade">
                         <strong>{{user_grade}}</strong>
@@ -87,7 +86,8 @@
                 <div class="st_pic">
                     <p>사진</p>
                     <div class="st_pic_img">
-                        <img src="" alt="">
+                        <!-- 만약 프로필 사진이 있다면 사진을 보여주고, 그렇지 않으면 기본 이미지 또는 설명 문구를 보여줍니다. -->
+                        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" onerror="this.onerror=null;this.src='{% static 'images/default_profile.jpg' %}';">
                         <p>회원님을 알릴 수 있는 사진을 등록해 주세요.</p>
                         <p>등록된 사진은 회원님의 게시물이나 댓글들에 사용됩니다.</p>
                     </div>
@@ -129,10 +129,27 @@
                 <div class="standard">
                     <strong>추가 회원정보</strong>
                 </div>
+                <!-- 환불계좌 관리 버튼 -->
                 <div class="st_pic_info">
                     <p>환불계좌</p>
-                    <strong>{{user_bank_account}}  {{user_bank_account_num}}</strong>
-                    <button>환불계좌 관리</button>
+                    <strong>{{ user_bank_account }}  {{ user_bank_account_num }}</strong>
+                    <button data-toggle="refundAccountModal">환불계좌 관리</button>
+                </div>
+                <!-- 환불계좌 관리 모달 -->
+                <div id="refundAccountModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>환불계좌 관리</h2>
+                        <!-- action 속성을 mypage URL로 설정합니다 -->
+                        <form action="{% url 'mypage' %}" method="post">                       
+                            {% csrf_token %}
+                            <label for="bank_account">은행 이름:</label>
+                            <input type="text" id="bank_account" name="bank_account" value="{{ user_bank_account }}">
+                            <label for="bank_account_num">계좌 번호:</label>
+                            <input type="text" id="bank_account_num" name="bank_account_num" value="{{ user_bank_account_num }}">
+                            <input type="submit" value="저장">
+                        </form>
+                    </div>
                 </div>
                 <div class="st_pic_info">
                     <p>배송지</p>
@@ -166,9 +183,16 @@
                     <div class="ps">
                         <li>구매정보 및 공지 알림은 수신설정에 상관없이 발송됩니다.</li>
                     </div>
-                    <div class="line">
-                        <p>탈퇴를 원하시면 회원탈퇴 버튼을 눌러주세요</p>
-                        <button>회원탈퇴</button>
+                    <!-- 회원 탈퇴 버튼을 포함하는 div에 id 추가 -->
+                    <div class="line" id="deleteAccountSection">
+                        <p>탈퇴를 원하시면 회원탈퇴 버튼을 눌러주이소</p>
+                        <!-- form 태그 추가 -->
+                        <form id="deleteAccountForm" action="{% url 'delete_account' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="delete_account">
+                            <!-- 버튼에 id 추가 -->
+                            <button id="deleteAccountButton" type="submit">회원탈퇴</button>
+                        </form>
                     </div>
                 </div>
             </div>

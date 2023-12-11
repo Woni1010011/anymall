@@ -14,17 +14,30 @@ function closeModal(modalId) {
 var closeButtons = document.getElementsByClassName("close");
 for (var i = 0; i < closeButtons.length; i++) {
     closeButtons[i].onclick = function() {
-        var modal = this.parentElement.parentElement;
+        var modal = this.parentElement.parentElement.parentElement;  // 모달 자체로 올라가야 합니다.
         modal.style.display = "none";
     }
 }
 
-// 버튼 클릭 이벤트 리스너
+// 모달 관련 이벤트 리스너
 document.addEventListener('click', function (e) {
     if (e.target.dataset.toggle === "refundAccountModal") {
         openModal('refundAccountModal');
     } else if (e.target.dataset.toggle === "shippingAddressModal") {
         openModal('shippingAddressModal');
+    }
+});
+
+// 회원탈퇴
+document.addEventListener('DOMContentLoaded', function() {
+    var deleteAccountButton = document.getElementById('deleteAccountButton');
+    if (deleteAccountButton) {
+        deleteAccountButton.addEventListener('click', function(event) {
+            event.preventDefault();  // 폼 제출을 방지
+            if (confirm('회원탈퇴를 하시겠습니까?')) {
+                document.getElementById('deleteAccountForm').submit(); // 폼 제출
+            }
+        });
     }
 });
 
